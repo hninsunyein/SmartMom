@@ -1,0 +1,44 @@
+{
+  "..\\node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts": {
+    "id": "..\\node_modules\\next\\dist\\client\\dev\\hot-reloader\\app\\use-websocket.js -> @vercel/turbopack-ecmascript-runtime/browser/dev/hmr-client/hmr-client.ts",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_next_dist_client_dev_noop-turbopack-hmr_js.js"
+    ]
+  },
+  "app\\admin\\login\\page.jsx -> ../../../components/auth/AdminLogin": {
+    "id": "app\\admin\\login\\page.jsx -> ../../../components/auth/AdminLogin",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_auth_AdminLogin_jsx.js"
+    ]
+  },
+  "app\\login\\advisor\\page.jsx -> ../../../components/auth/AdvisorLogin": {
+    "id": "app\\login\\advisor\\page.jsx -> ../../../components/auth/AdvisorLogin",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_auth_AdvisorLogin_jsx.js"
+    ]
+  },
+  "app\\login\\page.jsx -> ../../components/auth/ParentLogin": {
+    "id": "app\\login\\page.jsx -> ../../components/auth/ParentLogin",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_auth_ParentLogin_jsx.js"
+    ]
+  },
+  "app\\page.jsx -> ../components/auth/LandingPage": {
+    "id": "app\\page.jsx -> ../components/auth/LandingPage",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_auth_LandingPage_jsx.js"
+    ]
+  },
+  "app\\register\\advisor\\page.jsx -> ../../../components/auth/AdvisorRegister": {
+    "id": "app\\register\\advisor\\page.jsx -> ../../../components/auth/AdvisorRegister",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_auth_AdvisorRegister_jsx.js"
+    ]
+  },
+  "app\\register\\parent\\page.jsx -> ../../../components/auth/ParentRegister": {
+    "id": "app\\register\\parent\\page.jsx -> ../../../components/auth/ParentRegister",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_auth_ParentRegister_jsx.js"
+    ]
+  }
+}
