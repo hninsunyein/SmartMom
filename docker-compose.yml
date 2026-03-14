@@ -1,0 +1,87 @@
+services:
+  # MySQL Database
+  database:
+    image: mysql:8.0
+    container_name: smart-mom-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: smartmom123
+      MYSQL_DATABASE: smart_mom_db
+      MYSQL_USER: smart_mom_user
+      MYSQL_PASSWORD: smartmom456
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    ports:
+      - "3306:3306"
+    networks:
+      - smart-mom-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+
+  # NestJS Backend
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: smart-mom-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_USERNAME: smart_mom_user
+      DB_PASSWORD: smartmom456
+      DB_DATABASE: smart_mom_db
+      JWT_SECRET: your_super_secret_jwt_key_for_production_change_this
+      JWT_EXPIRES_IN: 24h
+      THROTTLE_TTL: 60000
+      THROTTLE_LIMIT: 100
+    ports:
+      - "5000:5000"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - smart-mom-network
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: smart-mom-frontend
+    restart: unless-stopped
+    environment:
+      # Points Next.js server-side proxy to the backend container name
+      BACKEND_URL: http://backend:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - smart-mom-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  smart-mom-network:
+    driver: bridge

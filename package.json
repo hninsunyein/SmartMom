@@ -1,10 +1,50 @@
 {
-  "name": "${PROJECT_NAME}",
+  "name": "smart-mom-balancing-system",
   "version": "1.0.0",
-  "description": "",
+  "description": "Smart Mom System - Interactive system for balancing work and parenting with NestJS backend, React frontend, and MySQL database",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "restart": "docker-compose restart",
+    "build": "docker-compose up -d --build",
+    "rebuild": "docker-compose down && docker-compose up -d --build",
+    "logs": "docker-compose logs -f",
+    "logs:backend": "docker-compose logs -f backend",
+    "logs:frontend": "docker-compose logs -f frontend",
+    "logs:database": "docker-compose logs -f database",
+    "status": "docker-compose ps",
+    "clean": "docker-compose down -v && docker system prune -f",
+    "reset": "npm run clean && npm run build",
+    "dev:backend": "cd server && npm run start:dev",
+    "dev:frontend": "cd client && npm run dev",
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "health": "curl -f http://localhost:5000/api/health || echo 'Backend not ready'",
+    "test": "echo \"Use npm run test:backend or npm run test:frontend for specific tests\"",
+    "test:backend": "cd server && npm run test",
+    "test:frontend": "cd client && npm run test"
   },
-  "private": true
+  "keywords": [
+    "smart-mom",
+    "parenting",
+    "child-development",
+    "nestjs",
+    "react",
+    "mysql",
+    "docker",
+    "healthcare",
+    "nutrition-tracking",
+    "growth-monitoring"
+  ],
+  "author": "Smart Mom Development Team",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "smart-mom-balancing-system"
+  }
 }
