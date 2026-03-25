@@ -123,7 +123,7 @@ export default function AdvisorRegister() {
                   <input
                     name={name} type={type} required
                     placeholder={placeholder} value={formData[name]} onChange={handleChange}
-                    className="w-full px-3 py-2 border-2 border-[#667eea] rounded-xl focus:outline-none focus:border-[#764ba2] focus:ring-2 focus:ring-[#667eea]/20 text-sm transition-colors"
+                    className="w-full px-3 py-2 border-2 border-purple-400 rounded-xl focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-400/20 text-sm transition-colors"
                   />
                 </div>
               ))}
@@ -138,9 +138,9 @@ export default function AdvisorRegister() {
                     <input
                       name={name} type={show ? 'text' : 'password'} required
                       placeholder="••••••••" value={formData[name]} onChange={handleChange}
-                      className="w-full px-3 py-2 pr-10 border-2 border-[#667eea] rounded-xl focus:outline-none focus:border-[#764ba2] focus:ring-2 focus:ring-[#667eea]/20 text-sm transition-colors"
+                      className="w-full px-3 py-2 pr-10 border-2 border-purple-400 rounded-xl focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-400/20 text-sm transition-colors"
                     />
-                    <button type="button" onClick={toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#667eea] hover:text-purple-700 transition-colors">
+                    <button type="button" onClick={toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-400 hover:text-purple-700 transition-colors">
                       {show ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
@@ -165,7 +165,7 @@ export default function AdvisorRegister() {
                             type="checkbox"
                             checked={availability[day.value][slot]}
                             onChange={() => toggleSlot(day.value, slot)}
-                            className="accent-[#667eea] w-3.5 h-3.5"
+                            className="accent-purple-400 w-3.5 h-3.5"
                           />
                           {label}
                         </label>
@@ -189,7 +189,7 @@ export default function AdvisorRegister() {
             </button>
           </form>
 
-          <a href="/login" className="block text-center text-[#667eea] font-semibold text-xs mt-3 hover:underline">
+          <a href="/login" className="block text-center text-purple-400 font-semibold text-xs mt-3 hover:underline">
             Already have an account? Sign In
           </a>
         </div>

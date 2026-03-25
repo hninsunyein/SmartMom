@@ -1,8 +1,3 @@
 {
-  "/login/page": "app/login/page.js",
-  "/admin/login/page": "app/admin/login/page.js",
-  "/login/advisor/page": "app/login/advisor/page.js",
-  "/register/parent/page": "app/register/parent/page.js",
-  "/register/advisor/page": "app/register/advisor/page.js",
   "/page": "app/page.js"
 }

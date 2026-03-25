@@ -39,7 +39,9 @@ services:
       DB_PASSWORD: smartmom456
       DB_DATABASE: smart_mom_db
       JWT_SECRET: your_super_secret_jwt_key_for_production_change_this
-      JWT_EXPIRES_IN: 24h
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_SECRET: your_super_secret_refresh_key_for_production_change_this
+      JWT_REFRESH_EXPIRES_IN: 7d
       THROTTLE_TTL: 60000
       THROTTLE_LIMIT: 100
     ports:
@@ -60,6 +62,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        BACKEND_URL: http://backend:5000
     container_name: smart-mom-frontend
     restart: unless-stopped
     environment:

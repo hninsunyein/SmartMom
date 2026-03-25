@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { Heart, Users, CalendarDays, TrendingUp } from 'lucide-react';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -79,6 +80,58 @@ export default function LandingPage() {
             <div key={label} className="text-center">
               <p className="text-3xl font-extrabold text-white">{value}</p>
               <p className="text-purple-300 text-sm mt-0.5">{label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="relative z-10 px-6 pb-20 max-w-5xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-extrabold text-white mb-2">Everything you need to support your child's growth</h2>
+          <p className="text-purple-300 text-sm">Our comprehensive platform helps working mothers stay connected with their child's development journey.</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              icon: Heart,
+              title: 'Child Health Tracking',
+              desc: "Monitor your child's growth, nutrition, and health milestones with expert guidance.",
+              gradient: 'from-pink-400 to-rose-500',
+              hover: 'from-pink-500/10 to-rose-500/5',
+            },
+            {
+              icon: Users,
+              title: 'Professional Support',
+              desc: 'Connect with certified healthcare advisors for personalized recommendations.',
+              gradient: 'from-purple-400 to-pink-500',
+              hover: 'from-purple-500/10 to-pink-500/5',
+            },
+            {
+              icon: CalendarDays,
+              title: 'Easy Scheduling',
+              desc: 'Book appointments with healthcare professionals at your convenience.',
+              gradient: 'from-blue-400 to-indigo-500',
+              hover: 'from-blue-500/10 to-indigo-500/5',
+            },
+            {
+              icon: TrendingUp,
+              title: 'Progress Analytics',
+              desc: "View detailed reports and charts to track your child's development over time.",
+              gradient: 'from-indigo-400 to-purple-500',
+              hover: 'from-indigo-500/10 to-purple-500/5',
+            },
+          ].map(({ icon: Icon, title, desc, gradient, hover }) => (
+            <div key={title} className="group relative bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/10 transition-all duration-300 overflow-hidden">
+              <div className={`absolute inset-0 bg-gradient-to-br ${hover} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+              <div className="relative z-10">
+                <div className={`w-14 h-14 bg-gradient-to-br ${gradient} rounded-2xl flex items-center justify-center mb-5 shadow-lg shrink-0`}>
+                  <Icon className="w-7 h-7 text-white" strokeWidth={1.8} />
+                </div>
+                <h3 className="text-white font-extrabold text-base mb-2">{title}</h3>
+                <p className="text-purple-200 text-sm leading-relaxed">{desc}</p>
+              </div>
             </div>
           ))}
         </div>

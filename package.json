@@ -17,7 +17,7 @@
     "clean": "docker-compose down -v && docker system prune -f",
     "reset": "npm run clean && npm run build",
     "dev:backend": "cd server && npm run start:dev",
-    "dev:frontend": "cd client && npm run dev",
+    "dev:frontend": "cd client && npm run dev -- -p 3000",
     "install:all": "cd server && npm install && cd ../client && npm install",
     "health": "curl -f http://localhost:5000/api/health || echo 'Backend not ready'",
     "test": "echo \"Use npm run test:backend or npm run test:frontend for specific tests\"",
