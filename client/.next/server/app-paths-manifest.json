@@ -1,3 +1,8 @@
 {
-  "/page": "app/page.js"
+  "/dashboard/page": "app/dashboard/page.js",
+  "/login/page": "app/login/page.js",
+  "/register/advisor/page": "app/register/advisor/page.js",
+  "/login/advisor/page": "app/login/advisor/page.js",
+  "/page": "app/page.js",
+  "/upgrade/page": "app/upgrade/page.js"
 }

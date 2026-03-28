@@ -138,3 +138,35 @@ INSERT INTO tips (type, title, category, content, age_group) VALUES
 ('health', 'Sleep Requirements', 'Sleep & Rest', 'Toddlers need 11-14 hours, school-age children need 9-12 hours of sleep per night.', 'All Ages'),
 ('health', 'Physical Activity', 'Physical Activity', 'Children need at least 60 minutes of moderate to vigorous activity daily.', '6-12 years'),
 ('health', 'Dental Care', 'Dental Health', 'Brush teeth twice daily. First dental visit should be at age 1 or when first tooth appears.', '0-2 years');
+
+-- ── Meal Planner: Free & Premium ──────────────────────────────────────────
+
+-- Parent Meal Selections Table
+-- Free  : one record per child (overwritten on each generate)
+-- Premium: new record per generate; is_active=1 current, is_active=0 archived
+CREATE TABLE parent_meal_selections (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  parent_id INT NOT NULL,
+  child_id INT NOT NULL,
+  age_group VARCHAR(20) NOT NULL,
+  nutrition_goal VARCHAR(200) NOT NULL,        -- comma-separated goals
+  plan_version ENUM('free', 'premium') DEFAULT 'free',
+  bmi_value DECIMAL(5,2) NULL,
+  generated_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  is_active TINYINT(1) DEFAULT 1,
+  FOREIGN KEY (parent_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (child_id) REFERENCES children(id) ON DELETE CASCADE
+);
+
+-- Selected Meal Plan Items Table
+-- Free   : week=1, day=1, 3 rows (breakfast/lunch/dinner)
+-- Premium: 4 weeks × 7 days × 3 meals = 84 rows per selection
+CREATE TABLE selected_meal_plan_items (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  selection_id INT NOT NULL,
+  meal_plan_id TEXT NOT NULL,                  -- meal content string e.g. "Rice + Grilled chicken + Salad"
+  week_number INT DEFAULT 1,
+  day_number INT DEFAULT 1,
+  meal_time ENUM('breakfast', 'lunch', 'dinner') NOT NULL,
+  FOREIGN KEY (selection_id) REFERENCES parent_meal_selections(id) ON DELETE CASCADE
+);

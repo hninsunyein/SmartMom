@@ -147,6 +147,7 @@ class ApiService {
   resetPassword(token, password)   { return this.post('/auth/reset-password', { token, password }); }
   refreshToken()                   { return this.post('/auth/refresh', { refreshToken: this.getRefreshToken() }); }
   logoutApi()                      { return this.post('/auth/logout', {}); }
+  upgradePlan()                    { return this.put('/auth/upgrade'); }
 
   // ─── Children ─────────────────────────────────────────────────────────────────
   // Response: { success, data: Child[] | Child }
@@ -172,23 +173,38 @@ class ApiService {
   generateMealPlan(ageGroup, goals)      { return this.post('/nutrition/generate', { ageGroup, goals }); }
   calculateCalories(foodItem, amount)    { return this.post('/nutrition/calculate', { foodItem, amount }); }
 
+  // Meal selection — Free & Premium
+  saveMealSelection(data)                { return this.post('/nutrition/meal-selections', data); }
+  getActiveMealPlan(childId)             { return this.get(`/nutrition/meal-selections/child/${childId}/active`); }
+  checkFreePlanExists(childId)           { return this.get(`/nutrition/meal-selections/child/${childId}/check`); }
+  getMealPlanHistory(childId)            { return this.get(`/nutrition/meal-selections/child/${childId}/history`); }
+  getShoppingList(selectionId)           { return this.get(`/nutrition/meal-selections/${selectionId}/shopping-list`); }
+  // Monthly restriction
+  checkMonthlyPlan(childId)              { return this.get(`/nutrition/child/${childId}/monthly-check`); }
+  deleteCurrentMonthPlan(childId)        { return this.delete(`/nutrition/child/${childId}/current-month-plan`); }
+  // Month plan view
+  getMonthPlan(childId, year, month)     { return this.get(`/nutrition/child/${childId}/month-plan?year=${year}&month=${month}`); }
+
   // ─── Appointments ─────────────────────────────────────────────────────────────
   // Response: { success, data: Appointment[] | Appointment }
 
-  getAppointments()           { return this.get('/appointments'); }
-  createAppointment(data)     { return this.post('/appointments', data); }
-  approveAppointment(id)      { return this.put(`/appointments/${id}/approve`); }
-  rejectAppointment(id)       { return this.put(`/appointments/${id}/reject`); }
-  cancelAppointment(id)       { return this.put(`/appointments/${id}/cancel`); }
+  getAppointments()                  { return this.get('/appointments'); }
+  createAppointment(data)            { return this.post('/appointments', data); }
+  approveAppointment(id)             { return this.put(`/appointments/${id}/approve`); }
+  rejectAppointment(id)              { return this.put(`/appointments/${id}/reject`); }
+  cancelAppointment(id)              { return this.put(`/appointments/${id}/cancel`); }
+  updateAppointmentNotes(id, notes)  { return this.request(`/appointments/${id}/notes`, { method: 'PATCH', body: JSON.stringify({ notes }) }); }
 
   // ─── Advisors ─────────────────────────────────────────────────────────────────
   // Response: { success, data: Advisor[] | Advisor }
 
   getAdvisors()           { return this.get('/advisors'); }
+  getAllAdvisors()         { return this.get('/advisors/all'); }
   getPendingAdvisors()    { return this.get('/advisors/pending'); }
   getAdvisor(id)          { return this.get(`/advisors/${id}`); }
   approveAdvisor(id)      { return this.put(`/advisors/${id}/approve`); }
   rejectAdvisor(id)       { return this.put(`/advisors/${id}/reject`); }
+  deleteAdvisor(id)       { return this.delete(`/advisors/${id}`); }
 
   // ─── Tips ─────────────────────────────────────────────────────────────────────
   // Response: { success, data: Tip[] | Tip }
@@ -202,7 +218,9 @@ class ApiService {
     return this.get(`/tips${query}`);
   }
 
-  createTip(data) { return this.post('/tips', data); }
+  createTip(data)        { return this.post('/tips', data); }
+  updateTip(id, data)    { return this.put(`/tips/${id}`, data); }
+  deleteTip(id)          { return this.delete(`/tips/${id}`); }
 
   // ─── Health check ─────────────────────────────────────────────────────────────
 

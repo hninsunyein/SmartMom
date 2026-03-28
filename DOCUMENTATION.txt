@@ -1,0 +1,650 @@
+================================================================================
+                     SMART MOM BALANCING SYSTEM — DOCUMENTATION
+================================================================================
+Last Updated : 2026-03-28
+Project Type : Full-Stack Web Application
+Description  : A child-care management platform for parents, advisors, and admins
+               that covers child profiles, growth tracking, nutrition planning,
+               appointment scheduling, and health/safety tips.
+================================================================================
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1. TECHNOLOGY STACK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  FRONTEND
+  ─────────────────────────────────────────────────────────────────────────────
+  Framework       : Next.js 15 (App Router)
+  UI Library      : React 19
+  State Management: Redux Toolkit 2.9
+  Styling         : Tailwind CSS 4.1
+  HTTP Client     : Fetch API (custom ApiService wrapper)
+  Icons           : Lucide React
+  Port            : 3000
+
+  BACKEND
+  ─────────────────────────────────────────────────────────────────────────────
+  Framework       : NestJS 10
+  ORM             : TypeORM 0.3
+  Database Driver : MySQL2
+  Auth            : JWT (Passport) — 15min access token, 7-day refresh token
+  Password Hash   : bcryptjs
+  Validation      : class-validator + class-transformer
+  Security        : Helmet (HTTP headers), Throttler (rate limiting)
+  Port            : 5000
+
+  DATABASE
+  ─────────────────────────────────────────────────────────────────────────────
+  Engine          : MySQL 8.0
+  Database Name   : smart_mom_db
+  Credentials     : smart_mom_user / smartmom456
+  Port            : 3306
+
+  DEVOPS / DEPLOYMENT
+  ─────────────────────────────────────────────────────────────────────────────
+  Containerisation: Docker + Docker Compose (3 services)
+  Reverse Proxy   : Nginx (inside frontend container)
+  API Proxy       : Next.js rewrites  /api/* → http://backend:5000/api/*
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 2. PROJECT STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Smart-Mom-Balancing-System/
+  ├── client/                   Frontend (Next.js)
+  ├── server/                   Backend (NestJS)
+  ├── postman/                  API collection for testing
+  ├── docker-compose.yml        Docker orchestration
+  ├── database_schema.sql       Complete MySQL schema + seed data
+  ├── init-db.sql               Legacy DB init file
+  ├── API_DOCS.md               Full API reference
+  ├── README.md                 Quick-start guide
+  ├── package.json              Root-level Docker/dev scripts
+  ├── .env                      Environment variables
+  └── .env.example              Environment variable template
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 3. FRONTEND STRUCTURE  (client/)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  src/app/                          Next.js App Router pages
+  ├── page.jsx                      Landing page (hero/home)
+  ├── layout.jsx                    Root layout with Redux Provider
+  ├── globals.css                   Global styles
+  ├── login/
+  │   ├── page.jsx                  Parent login
+  │   ├── admin/page.jsx            Admin login
+  │   └── advisor/page.jsx          Advisor login
+  ├── register/
+  │   ├── page.jsx                  Register selector
+  │   ├── parent/page.jsx           Parent registration
+  │   └── advisor/page.jsx          Advisor registration
+  ├── dashboard/page.jsx            Main dashboard (all roles)
+  ├── forgot-password/page.jsx      Password recovery
+  └── upgrade/page.jsx              Plan upgrade (Free → Premium)
+
+  src/components/
+  ├── auth/
+  │   ├── LandingPage.jsx           Marketing/hero page component
+  │   ├── ParentLogin.jsx           Login form for parents
+  │   ├── ParentRegister.jsx        Registration form for parents
+  │   ├── AdvisorLogin.jsx          Login form for advisors
+  │   ├── AdvisorRegister.jsx       Registration form for advisors
+  │   ├── AdminLogin.jsx            Login form for admin
+  │   └── ForgotPassword.jsx        Password reset request form
+  │
+  ├── dashboard/
+  │   ├── DashboardLayout.jsx       Tab navigation wrapper
+  │   ├── ParentDashboard.jsx       Role-aware dashboard router
+  │   └── tabs/
+  │       ├── OverviewTab.jsx       Summary: stats + today's meals
+  │       ├── ChildrenTab.jsx       Add / view / edit / delete children
+  │       ├── GrowthTab.jsx         Growth charts (height, weight, BMI)
+  │       ├── NutritionTab.jsx      Meal plan generator (Free & Premium)
+  │       ├── AppointmentsTab.jsx   Book appointments (Parent) / manage requests + add notes (Advisor)
+  │       ├── AdvisorsTab.jsx       Browse approved advisors
+  │       ├── AdvisorClientsTab.jsx Advisor's client list + appointment history + notes
+  │       ├── AdvisorScheduleTab.jsx Advisor's weekly availability settings
+  │       ├── TipsTab.jsx           Safety & health tips (filter by type/age)
+  │       └── AdminTab.jsx          Admin panel (advisor approvals + tips CRUD)
+  │
+  └── shared/
+      ├── Button.jsx                Reusable button component
+      └── SuccessDialog.jsx         Success notification dialog
+
+  src/redux/
+  ├── store.js                      Redux store (auth, children, appointments)
+  └── slices/
+      ├── authSlice.js              Auth state + thunks (login, logout, register, profile, upgrade)
+      ├── childrenSlice.js          Children CRUD + local state
+      └── appointmentsSlice.js      Appointments CRUD + status + notes
+
+  src/services/
+  └── api.js                        Centralised API service (all HTTP calls)
+                                    Handles: auth headers, token refresh on 401,
+                                    force-logout on refresh failure
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 4. BACKEND STRUCTURE  (server/src/)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Module          Route Prefix    Description
+  ─────────────── ─────────────── ─────────────────────────────────────────────
+  auth            /auth           Registration, login, JWT refresh, logout,
+                                  profile, forgot/reset password, plan upgrade
+  users           /users          List approved advisors (parent access)
+  children        /children       Child profile CRUD for parent
+  growth          /growth         Growth measurements per child
+  nutrition       /nutrition      Meal plan generation, calorie calculation,
+                                  meal selections (Free/Premium), shopping lists
+  appointments    /appointments   Book, approve, reject, cancel, add notes
+  advisors        /advisors       Browse, approve, reject, delete advisors
+  tips            /tips           Safety & health tips with filters
+
+  Each module follows the pattern:
+    <name>.module.ts      →  imports, providers, exports
+    <name>.controller.ts  →  route handlers, guards
+    <name>.service.ts     →  business logic, database queries
+    dto/                  →  request body validation schemas
+
+  Auth Guards
+  ─────────────────────────────────────────────────────────────────────────────
+  JwtAuthGuard      Validates Bearer token on protected routes
+  LocalAuthGuard    Email/password strategy for login endpoint
+  RolesGuard        Checks @Roles() decorator against req.user.userType
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 5. DATABASE SCHEMA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  TABLE: users
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK AUTO_INCREMENT
+  email               VARCHAR UNIQUE NOT NULL
+  password            VARCHAR NOT NULL (bcrypt hash)
+  full_name           VARCHAR NOT NULL
+  user_type           ENUM('parent', 'advisor', 'admin')
+  age                 INT (parents: 25–42)
+  phone               VARCHAR
+  specialty           VARCHAR (advisors only)
+  license_number      VARCHAR (advisors only)
+  experience_years    INT (advisors only)
+  approval_status     ENUM('pending', 'approved', 'rejected')
+  plan_type           ENUM('free', 'premium')  DEFAULT 'free'
+  password_reset_token VARCHAR
+  password_reset_expires DATETIME
+  created_at          DATETIME
+  updated_at          DATETIME
+
+  TABLE: advisor_availability
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK
+  advisor_id          INT FK → users(id)
+  day_of_week         ENUM('monday'…'sunday')
+  start_time          TIME
+  end_time            TIME
+  created_at / updated_at
+
+  TABLE: children
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK
+  parent_id           INT FK → users(id)
+  name                VARCHAR NOT NULL
+  date_of_birth       DATE
+  gender              ENUM('male', 'female', 'other')
+  blood_type          VARCHAR
+  allergies           TEXT
+  medical_conditions  TEXT
+  medications         TEXT
+  created_at / updated_at
+
+  TABLE: growth_tracking
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK
+  child_id            INT FK → children(id)
+  measurement_date    DATE NOT NULL
+  height              DECIMAL(5,2)   cm
+  weight              DECIMAL(5,2)   kg
+  bmi                 DECIMAL(5,2)   calculated
+  head_circumference  DECIMAL(5,2)   cm
+  notes               TEXT
+  created_at          DATETIME
+
+  TABLE: nutrition_plans  (legacy)
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK
+  child_id            INT FK → children(id)
+  plan_date           DATE
+  age_group           VARCHAR
+  goals               TEXT
+  breakfast / lunch / dinner / snacks   TEXT
+  notes               TEXT
+  created_at / updated_at
+
+  TABLE: parent_meal_selections
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK
+  parent_id           INT FK → users(id)
+  child_id            INT FK → children(id)
+  age_group           VARCHAR   ('0-2', '3-5', '6-12', '13-18')
+  nutrition_goal      VARCHAR   (comma-separated)
+  plan_version        ENUM('free', 'premium')
+  bmi_value           DECIMAL(5,2)
+  generated_date      DATE
+  is_active           TINYINT(1)
+  created_at          DATETIME
+
+  TABLE: selected_meal_plan_items
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK
+  selection_id        INT FK → parent_meal_selections(id)
+  meal_plan_id        TEXT   (actual meal content string)
+  week_number         INT
+  day_number          INT
+  meal_time           ENUM('breakfast', 'lunch', 'dinner')
+
+  TABLE: appointments
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK
+  parent_id           INT FK → users(id)
+  advisor_id          INT FK → users(id)
+  child_id            INT FK → children(id)
+  appointment_date    DATE NOT NULL
+  appointment_time    TIME
+  time_slot           VARCHAR   ('morning', 'evening')
+  status              ENUM('pending','confirmed','completed','cancelled','rejected')
+  reason              TEXT
+  notes               TEXT   (advisor writes during/after appointment)
+  created_at / updated_at
+
+  TABLE: tips
+  ─────────────────────────────────────────────────────────────────────────────
+  id                  INT PK
+  type                ENUM('safety', 'health')
+  title               VARCHAR NOT NULL
+  category            VARCHAR
+  content             TEXT
+  age_group           VARCHAR   ('All Ages', '0-2 years', '3-5 years',
+                                  '6-12 years', '13-18 years')
+  created_at / updated_at
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 6. USER ROLES & PERMISSIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  PARENT (Free)
+  ─────────────────────────────────────────────────────────────────────────────
+  - Register and log in
+  - Add / edit / delete child profiles
+  - Track child growth (height, weight, BMI, head circumference)
+  - Generate a single active meal plan per child (1-week, 3 meals/day)
+  - View active meal plan and shopping list
+  - Browse approved advisors
+  - Book appointments with advisors
+  - Cancel pending appointments
+  - View confirmed appointments and doctor's notes
+  - View safety & health tips
+
+  PARENT (Premium)
+  ─────────────────────────────────────────────────────────────────────────────
+  All Free features, plus:
+  - Generate 4-week meal plans (28 days × 3 meals)
+  - Save and archive multiple meal plan versions
+  - Monthly meal plan history
+
+  ADVISOR
+  ─────────────────────────────────────────────────────────────────────────────
+  - Register and await admin approval
+  - Set weekly availability (days + time slots)
+  - View pending appointment requests
+  - Approve or reject appointment requests
+  - View all appointments (confirmed, cancelled, rejected)
+  - Add notes to appointments (rich text with bold/italic/bullets)
+  - View client list with appointment history and notes
+
+  ADMIN
+  ─────────────────────────────────────────────────────────────────────────────
+  - Log in via separate admin login page
+  - View all advisors (filter: All / Pending / Approved / Rejected)
+  - Approve or reject advisor registrations
+  - Delete advisor accounts (cascades: availability + appointments)
+  - Add, edit, and delete tips (Safety & Health)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 7. API ENDPOINTS REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  All endpoints are prefixed with /api
+
+  AUTH
+  ─────────────────────────────────────────────────────────────────────────────
+  POST   /auth/register/parent        Register a parent account
+  POST   /auth/register/advisor       Register an advisor account
+  POST   /auth/login                  Login (returns access + refresh tokens)
+  POST   /auth/refresh                Refresh access token
+  POST   /auth/logout                 Invalidate refresh token
+  GET    /auth/me                     Get current user profile  [JWT]
+  PUT    /auth/upgrade                Upgrade plan to premium   [JWT]
+  POST   /auth/forgot-password        Request password reset email
+  POST   /auth/reset-password         Set new password with reset token
+
+  CHILDREN                                                        [JWT, Parent]
+  ─────────────────────────────────────────────────────────────────────────────
+  GET    /children                    List all children for logged-in parent
+  GET    /children/:id                Get single child (with latest growth)
+  POST   /children                    Add a new child
+  PUT    /children/:id                Update child profile
+  DELETE /children/:id                Delete child and all related data
+
+  GROWTH                                                          [JWT, Parent]
+  ─────────────────────────────────────────────────────────────────────────────
+  GET    /growth/child/:childId       Get full growth history for a child
+  POST   /growth                      Add a new growth measurement
+
+  NUTRITION                                                       [JWT]
+  ─────────────────────────────────────────────────────────────────────────────
+  POST   /nutrition/generate                    Generate meal plan options
+  POST   /nutrition/calculate                   Calculate calories for a food
+  GET    /nutrition/plans/child/:childId        Get saved nutrition plans
+  POST   /nutrition/plans                       Save a nutrition plan
+  POST   /nutrition/meal-selections             Save a meal selection
+  GET    /nutrition/meal-selections/child/:id/active    Get active meal plan
+  GET    /nutrition/meal-selections/child/:id/check     Check free plan exists
+  GET    /nutrition/meal-selections/child/:id/history   Meal plan history
+  GET    /nutrition/meal-selections/:id/shopping-list   Shopping list
+  GET    /nutrition/child/:childId/monthly-check        Monthly plan check
+  DELETE /nutrition/child/:childId/current-month-plan   Delete current plan
+  GET    /nutrition/child/:childId/month-plan           Month plan view
+
+  APPOINTMENTS                                                    [JWT]
+  ─────────────────────────────────────────────────────────────────────────────
+  GET    /appointments                Get appointments for current user
+  POST   /appointments                Book a new appointment         [Parent]
+  PUT    /appointments/:id/approve    Approve an appointment         [Advisor]
+  PUT    /appointments/:id/reject     Reject an appointment          [Advisor]
+  PUT    /appointments/:id/cancel     Cancel an appointment          [Parent]
+  PATCH  /appointments/:id/notes      Add/update notes               [Advisor]
+
+  ADVISORS                                                        [JWT]
+  ─────────────────────────────────────────────────────────────────────────────
+  GET    /advisors                    List approved advisors         [Parent]
+  GET    /advisors/all                List all advisors              [Admin]
+  GET    /advisors/pending            List pending advisors          [Admin]
+  GET    /advisors/:id                Get advisor details
+  PUT    /advisors/:id/approve        Approve advisor                [Admin]
+  PUT    /advisors/:id/reject         Reject advisor                 [Admin]
+  DELETE /advisors/:id                Delete advisor                 [Admin]
+
+  TIPS                                                            [JWT]
+  ─────────────────────────────────────────────────────────────────────────────
+  GET    /tips                        List tips (query: type, ageGroup)
+  POST   /tips                        Create tip                     [Admin]
+  PUT    /tips/:id                    Update tip                     [Admin]
+  DELETE /tips/:id                    Delete tip                     [Admin]
+
+  HEALTH
+  ─────────────────────────────────────────────────────────────────────────────
+  GET    /health                      Server health check (no auth)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 8. NUTRITION SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Age Groups
+  ─────────────────────────────────────────────────────────────────────────────
+  0-2    Infant / Toddler
+  3-5    Preschool
+  6-12   School Age
+  13-18  Teenager
+
+  Nutrition Goals (can be combined)
+  ─────────────────────────────────────────────────────────────────────────────
+  weight_gain       Foods supporting healthy weight gain
+  height_growth     Foods supporting bone/height development
+  immunity_boost    Foods supporting immune system
+
+  Plan Types
+  ─────────────────────────────────────────────────────────────────────────────
+  Free     : 1 active plan per child. Single week (7 days × 3 meals = 21 items)
+             User must delete current plan before generating a new one.
+  Premium  : Multiple archived plans. 4 weeks (28 days × 3 meals = 84 items)
+
+  Meal Generation
+  ─────────────────────────────────────────────────────────────────────────────
+  - POST /nutrition/generate with { ageGroup, goals }
+  - Returns 5 randomly shuffled options per meal (breakfast, lunch, dinner)
+  - Meals are mixed from age-group base foods + goal-specific boosters
+  - Parent selects one option per meal and saves
+
+  Calorie Calculator
+  ─────────────────────────────────────────────────────────────────────────────
+  - POST /nutrition/calculate with { foodItem, amount }
+  - Returns calories per 100g and total for given amount
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 9. APPOINTMENT WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Status Flow:
+    pending → confirmed (advisor approves)
+    pending → rejected  (advisor rejects)
+    pending → cancelled (parent cancels)
+
+  Time Slots:
+    Morning  : 9:00 AM, 10:00 AM, 11:00 AM
+    Evening  : 2:00 PM, 3:00 PM, 4:00 PM
+
+  Appointment Notes (Advisor Feature):
+    - Advisor clicks "📝 Notes" on any appointment in "All Appointments"
+    - Rich-text editor with formatting toolbar: Bold (**text**), Italic (_text_), Bullet (• text)
+    - Notes saved via PATCH /appointments/:id/notes
+    - Notes visible to parents in their "✅ Confirmed Appointments" section
+    - Notes visible in Advisor's "My Clients → View Details" modal
+
+  My Clients (Advisor):
+    - Derived from all appointments (any status)
+    - "View Details" modal shows: client info, children, full appointment history
+    - Each appointment shows status badge + doctor's notes (if any)
+    - Notes rendered with bold/italic/bullet formatting
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 10. ADVISOR APPROVAL WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Advisor registers via /register/advisor
+  2. Account created with approval_status = 'pending'
+  3. Admin logs in and sees advisor in "Pending" filter tab
+  4. Admin can Approve → status = 'approved' (advisor can now log in fully)
+  5. Admin can Reject  → status = 'rejected'
+  6. Admin can Delete  → removes advisor_availability rows, then appointments
+                         rows, then the user row (FK-safe cascade)
+  7. Only approved advisors appear in parent's "Browse Advisors" tab
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 11. AUTHENTICATION & SECURITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Token Storage     : sessionStorage (browser, cleared on tab close)
+  Access Token TTL  : 15 minutes
+  Refresh Token TTL : 7 days
+  Auto-Refresh      : On 401 response, ApiService tries /auth/refresh once.
+                      If that fails, force-logout fires (auth:logout event)
+  Password Reset    : Token-based, 1-hour expiry
+  Rate Limiting     : 100 requests per 60 seconds per IP
+  Security Headers  : Helmet middleware (XSS, HSTS, CSP, etc.)
+  CORS              : Configured in NestJS app bootstrap (main.ts)
+  Input Validation  : class-validator DTOs on all POST/PUT endpoints
+
+  Parent Registration Rules:
+    - Age must be between 25 and 42
+    - Password: min 8 chars, at least 1 uppercase, 1 lowercase, 1 number
+    - Phone: optional, validated format
+
+  Advisor Registration Rules:
+    - Specialty: required
+    - License number: required
+    - Experience years: required integer
+    - Availability slots: required array of { dayOfWeek, startTime, endTime }
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 12. DOCKER / DEPLOYMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Services in docker-compose.yml:
+  ─────────────────────────────────────────────────────────────────────────────
+  database   MySQL 8.0 on port 3306
+             Volume: mysql_data (persistent)
+             Init:   database_schema.sql executed on first start
+             Health: mysqladmin ping
+
+  backend    NestJS on port 5000
+             Depends on: database (healthy)
+             Health: node healthcheck.js → GET /api/health
+
+  frontend   Next.js on port 3000
+             Depends on: backend (healthy)
+             Proxy: /api/* → http://backend:5000/api/*
+             Health: curl http://localhost:3000
+
+  Root-level npm scripts (run from project root):
+  ─────────────────────────────────────────────────────────────────────────────
+  npm run start          Start all containers (detached)
+  npm run stop           Stop all containers
+  npm run restart        Restart all containers
+  npm run build          Build Docker images
+  npm run rebuild        Rebuild without cache
+  npm run clean          Stop + remove containers and volumes
+  npm run reset          Clean + rebuild + start
+  npm run logs           Stream all container logs
+  npm run logs:backend   Stream backend logs only
+  npm run logs:frontend  Stream frontend logs only
+  npm run logs:database  Stream database logs only
+  npm run status         Show container status
+  npm run health         Hit /api/health endpoint
+  npm run dev:backend    Run NestJS in dev mode (no Docker)
+  npm run dev:frontend   Run Next.js in dev mode (no Docker)
+  npm run install:all    npm install in both client/ and server/
+
+  Environment Variables (.env):
+  ─────────────────────────────────────────────────────────────────────────────
+  MYSQL_ROOT_PASSWORD
+  MYSQL_DATABASE         smart_mom_db
+  MYSQL_USER             smart_mom_user
+  MYSQL_PASSWORD         smartmom456
+  NODE_ENV               production
+  PORT                   5000
+  DB_HOST / DB_PORT / DB_USERNAME / DB_PASSWORD / DB_DATABASE
+  JWT_SECRET             (secret key for access tokens)
+  JWT_ACCESS_EXPIRES_IN  15m
+  JWT_REFRESH_SECRET     (secret key for refresh tokens)
+  JWT_REFRESH_EXPIRES_IN 7d
+  THROTTLE_TTL           60000   (ms)
+  THROTTLE_LIMIT         100     (requests per TTL)
+  BACKEND_URL            http://backend:5000  (used by Next.js proxy)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 13. REDUX STATE STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  store.auth
+  ─────────────────────────────────────────────────────────────────────────────
+  user            Object   Full user profile from /auth/me
+  token           String   JWT access token
+  isAuthenticated Boolean
+  isLoading       Boolean
+  isHydrating     Boolean  (true while restoring session on page load)
+  error           String|null
+
+  Thunks: loginUser, logoutUser, registerParent, registerAdvisor,
+          getProfile, upgradePlan
+
+  store.children
+  ─────────────────────────────────────────────────────────────────────────────
+  list            Array    Child objects (includes latest growth data)
+  isLoading       Boolean
+  error           String|null
+
+  Thunks: fetchChildren, addChild, updateChild, deleteChild
+
+  store.appointments
+  ─────────────────────────────────────────────────────────────────────────────
+  list            Array    Appointment objects (includes parent, advisor, child relations)
+  isLoading       Boolean
+  error           String|null
+
+  Thunks: fetchAppointments, bookAppointment, approveAppointment,
+          rejectAppointment, cancelAppointment, saveAppointmentNotes
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 14. TEST CREDENTIALS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Role     Email                 Password
+  ──────── ───────────────────── ────────
+  Parent   parent@test.com       password
+  Advisor  advisor@test.com      password
+  Admin    (set in .env / seed)  (set in .env / seed)
+
+  Login URLs:
+  ─────────────────────────────────────────────────────────────────────────────
+  Parent / Advisor   http://localhost:3000/login
+  Admin              http://localhost:3000/login/admin
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 15. DASHBOARD TAB ROUTING (by role)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  All roles log in and redirect to /dashboard.
+  ParentDashboard.jsx renders different tabs based on user.userType.
+
+  PARENT tabs:
+    overview      | children   | nutrition  | growth
+    appointments  | advisors   | tips
+
+  ADVISOR tabs:
+    overview      | requests (AppointmentsTab)
+    clients       | schedule (AdvisorScheduleTab)
+
+  ADMIN:
+    Single AdminTab component
+    Sections: Advisor Approvals (filter: All/Pending/Approved/Rejected)
+              Manage Tips (view/add/edit/delete)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 16. KEY DESIGN DECISIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - API proxy via Next.js rewrites eliminates CORS issues in both dev and Docker
+  - Growth data is stored separately in growth_tracking and merged onto child
+    objects server-side — no N+1 API calls needed on the Children page
+  - Meal plan items store the meal content string in meal_plan_id column (TEXT)
+    to keep the item table schema simple and avoid a separate meals catalog table
+  - Free plan enforces 1 active plan per child at the DB query level
+    (is_active = 1); generating a new plan requires deleting the current one
+  - Advisor delete uses ordered FK cleanup: availability → appointments → user
+    to satisfy MySQL foreign key constraints without disabling FK checks
+  - SessionStorage is used for tokens instead of localStorage so tokens are
+    automatically cleared when the browser tab is closed
+  - Admin has a separate login route (/login/admin) so it is not reachable
+    from the regular parent/advisor login page
+
+
+================================================================================
+                                END OF DOCUMENTATION
+================================================================================

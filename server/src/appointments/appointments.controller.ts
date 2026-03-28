@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, Patch } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AppointmentsService } from './appointments.service';
 
@@ -30,5 +30,10 @@ export class AppointmentsController {
   @Put(':id/cancel')
   async cancelAppointment(@Request() req, @Param('id') id: string) {
     return this.appointmentsService.cancelByParent(+id, req.user.id);
+  }
+
+  @Patch(':id/notes')
+  async updateNotes(@Request() req, @Param('id') id: string, @Body('notes') notes: string) {
+    return this.appointmentsService.updateNotes(+id, req.user.id, notes);
   }
 }

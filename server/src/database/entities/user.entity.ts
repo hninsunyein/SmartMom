@@ -14,6 +14,11 @@ export enum ApprovalStatus {
   REJECTED = 'rejected',
 }
 
+export enum PlanType {
+  FREE = 'free',
+  PREMIUM = 'premium',
+}
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
@@ -70,6 +75,14 @@ export class User {
   @Exclude()
   @Column({ nullable: true, name: 'refresh_token' })
   refreshToken: string;
+
+  @Column({
+    type: 'enum',
+    enum: PlanType,
+    default: PlanType.FREE,
+    name: 'plan_type',
+  })
+  planType: PlanType;
 
   @OneToMany(() => Child, (child) => child.parent)
   children: Child[];

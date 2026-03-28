@@ -26,28 +26,30 @@ export const cancelAppointment = createAsyncThunk('appointments/cancel', async (
   catch (e) { return rejectWithValue(e.message); }
 });
 
+export const saveAppointmentNotes = createAsyncThunk('appointments/saveNotes', async ({ id, notes }, { rejectWithValue }) => {
+  try { return await apiService.updateAppointmentNotes(id, notes); }
+  catch (e) { return rejectWithValue(e.message); }
+});
+
+const updateInList = (list, payload) => {
+  const idx = list.findIndex(x => x.id === payload.data.id);
+  if (idx !== -1) list[idx] = { ...list[idx], ...payload.data };
+};
+
 const appointmentsSlice = createSlice({
   name: 'appointments',
   initialState: { list: [], isLoading: false, error: null },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAppointments.pending, (s) => { s.isLoading = true; })
+      .addCase(fetchAppointments.pending,   (s) => { s.isLoading = true; })
       .addCase(fetchAppointments.fulfilled, (s, a) => { s.isLoading = false; s.list = a.payload.data || []; })
-      .addCase(fetchAppointments.rejected, (s, a) => { s.isLoading = false; s.error = a.payload; })
-      .addCase(bookAppointment.fulfilled, (s, a) => { s.list.unshift(a.payload.data); })
-      .addCase(approveAppointment.fulfilled, (s, a) => {
-        const idx = s.list.findIndex(x => x.id === a.payload.data.id);
-        if (idx !== -1) s.list[idx] = a.payload.data;
-      })
-      .addCase(rejectAppointment.fulfilled, (s, a) => {
-        const idx = s.list.findIndex(x => x.id === a.payload.data.id);
-        if (idx !== -1) s.list[idx] = a.payload.data;
-      })
-      .addCase(cancelAppointment.fulfilled, (s, a) => {
-        const idx = s.list.findIndex(x => x.id === a.payload.data.id);
-        if (idx !== -1) s.list[idx] = a.payload.data;
-      });
+      .addCase(fetchAppointments.rejected,  (s, a) => { s.isLoading = false; s.error = a.payload; })
+      .addCase(bookAppointment.fulfilled,   (s, a) => { s.list.unshift(a.payload.data); })
+      .addCase(approveAppointment.fulfilled,(s, a) => { updateInList(s.list, a.payload); })
+      .addCase(rejectAppointment.fulfilled, (s, a) => { updateInList(s.list, a.payload); })
+      .addCase(cancelAppointment.fulfilled, (s, a) => { updateInList(s.list, a.payload); })
+      .addCase(saveAppointmentNotes.fulfilled, (s, a) => { updateInList(s.list, a.payload); });
   },
 });
 

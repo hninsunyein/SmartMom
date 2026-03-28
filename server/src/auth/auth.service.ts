@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
 import { UsersService } from '../users/users.service';
-import { User, UserType, ApprovalStatus } from '../database/entities/user.entity';
+import { User, UserType, ApprovalStatus, PlanType } from '../database/entities/user.entity';
 import { RegisterParentDto } from './dto/register-parent.dto';
 import { RegisterAdvisorDto } from './dto/register-advisor.dto';
 
@@ -81,6 +81,7 @@ export class AuthService {
         phone: user.phone,
         specialty: user.specialty,
         approvalStatus: user.approvalStatus,
+        planType: user.planType,
       },
     };
   }
@@ -129,6 +130,8 @@ export class AuthService {
         fullName: user.fullName,
         userType: user.userType,
         age: user.age,
+        phone: user.phone,
+        planType: user.planType,
       },
     };
   }
@@ -214,6 +217,34 @@ export class AuthService {
     return {
       success: true,
       message: 'Password has been reset successfully. You can now sign in with your new password.',
+    };
+  }
+
+  async upgradePlan(userId: number) {
+    const user = await this.usersService.findById(userId);
+
+    if (!user) throw new UnauthorizedException('User not found');
+    if (user.userType !== UserType.PARENT) {
+      throw new ForbiddenException('Plan upgrades are only available for parent accounts');
+    }
+    if (user.planType === PlanType.PREMIUM) {
+      return { success: true, message: 'You are already on the Premium plan', user };
+    }
+
+    const upgraded = await this.usersService.upgradePlan(userId);
+
+    return {
+      success: true,
+      message: 'Upgraded to Premium successfully!',
+      user: {
+        id: upgraded.id,
+        email: upgraded.email,
+        fullName: upgraded.fullName,
+        userType: upgraded.userType,
+        age: upgraded.age,
+        phone: upgraded.phone,
+        planType: upgraded.planType,
+      },
     };
   }
 }

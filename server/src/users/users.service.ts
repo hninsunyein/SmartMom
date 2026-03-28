@@ -1,7 +1,7 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
-import { User, UserType, ApprovalStatus } from '../database/entities/user.entity';
+import { User, UserType, ApprovalStatus, PlanType } from '../database/entities/user.entity';
 import { AdvisorAvailability } from '../database/entities/advisor-availability.entity';
 import * as bcrypt from 'bcryptjs';
 
@@ -21,7 +21,7 @@ export class UsersService {
   async findById(id: number): Promise<User | null> {
     return this.userRepository.findOne({ 
       where: { id },
-      select: ['id', 'email', 'fullName', 'userType', 'age', 'phone', 'specialty', 'approvalStatus']
+      select: ['id', 'email', 'fullName', 'userType', 'age', 'phone', 'specialty', 'approvalStatus', 'planType']
     });
   }
 
@@ -30,6 +30,7 @@ export class UsersService {
     password: string;
     fullName: string;
     age: number;
+    phone:string;
   }): Promise<User> {
     const existingUser = await this.findByEmail(userData.email);
     if (existingUser) {
@@ -43,6 +44,7 @@ export class UsersService {
       password: hashedPassword,
       userType: UserType.PARENT,
       approvalStatus: ApprovalStatus.APPROVED,
+      planType: PlanType.FREE,
     });
 
     return this.userRepository.save(user);
@@ -136,6 +138,11 @@ export class UsersService {
 
   async clearRefreshToken(userId: number): Promise<void> {
     await this.userRepository.update(userId, { refreshToken: null });
+  }
+
+  async upgradePlan(userId: number): Promise<User> {
+    await this.userRepository.update(userId, { planType: PlanType.PREMIUM });
+    return this.userRepository.findOne({ where: { id: userId } });
   }
 
   async findApprovedAdvisors(): Promise<User[]> {

@@ -56,7 +56,7 @@ export default function ParentRegister() {
 
         <div className="text-center mb-3">
           <div className="text-4xl mb-1">🤱</div>
-          <h1 className="text-2xl font-extrabold text-white drop-shadow-lg">Smart Mom</h1>
+          <h1 className="text-2xl font-extrabold text-white drop-shadow-lg">Smart Mom 11</h1>
           <p className="text-white/85 mt-0.5 text-xs">Create your parent account</p>
         </div>
 

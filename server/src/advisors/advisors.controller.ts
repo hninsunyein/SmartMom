@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param, UseGuards, Request } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdvisorsService } from './advisors.service';
 
@@ -10,6 +10,11 @@ export class AdvisorsController {
   @Get()
   async getApprovedAdvisors() {
     return this.advisorsService.findApproved();
+  }
+
+  @Get('all')
+  async getAllAdvisors() {
+    return this.advisorsService.findAll();
   }
 
   @Get('pending')
@@ -30,5 +35,10 @@ export class AdvisorsController {
   @Put(':id/reject')
   async rejectAdvisor(@Param('id') id: string) {
     return this.advisorsService.updateApprovalStatus(+id, 'rejected');
+  }
+
+  @Delete(':id')
+  async deleteAdvisor(@Param('id') id: string) {
+    return this.advisorsService.remove(+id);
   }
 }

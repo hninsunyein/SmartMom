@@ -5,13 +5,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { logout } from '../../redux/slices/authSlice';
 
+const PREMIUM_TABS = new Set(['appointments', 'advisors']);
+
 const parentNavItems = [
   { id: 'overview',      label: 'Overview',          icon: '🏠' },
   { id: 'children',      label: 'My Children',        icon: '👶' },
   { id: 'nutrition',     label: 'Nutrition',          icon: '🍎' },
   { id: 'growth',        label: 'Growth Tracking',   icon: '📈' },
-  { id: 'appointments',  label: 'Appointments',       icon: '📅' },
-  { id: 'advisors',      label: 'Find Advisors',     icon: '👨‍⚕️' },
+  { id: 'appointments',  label: 'Appointments',       icon: '📅', premium: true },
+  { id: 'advisors',      label: 'Find Advisors',     icon: '👨‍⚕️', premium: true },
   { id: 'tips',          label: 'Tips & Info',        icon: '📚' },
 ];
 
@@ -41,6 +43,8 @@ export default function DashboardLayout({ children, activeTab, onTabChange }) {
     parentNavItems;
 
   const tabLabel = navItems.find(n => n.id === activeTab)?.label || activeTab;
+  const isParent = user?.userType === 'parent';
+  const isFree = isParent && user?.planType !== 'premium';
 
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
@@ -59,36 +63,76 @@ export default function DashboardLayout({ children, activeTab, onTabChange }) {
           )}
         </div>
 
-        {/* User info */}
+        {/* User info + plan badge */}
         {sidebarOpen && user && (
           <div className="px-4 py-3 border-b border-white/20 bg-white/10">
             <p className="text-white/70 text-xs mb-0.5">Logged in as</p>
             <p className="text-white font-semibold text-sm truncate">{user.fullName}</p>
-            <span className="inline-block bg-white/25 text-white text-xs px-2.5 py-0.5 rounded-full mt-1 capitalize">
-              {user.userType}
-            </span>
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
+              <span className="inline-block bg-white/25 text-white text-xs px-2.5 py-0.5 rounded-full capitalize">
+                {user.userType}
+              </span>
+              {user.userType === 'parent' && (
+                <span className={`inline-block text-xs px-2.5 py-0.5 rounded-full font-semibold border ${
+                  user.planType === 'premium'
+                    ? 'bg-yellow-400/30 text-yellow-100 border-yellow-300/50'
+                    : 'bg-white/20 text-yellow-200 border-yellow-300/40'
+                }`}>
+                  {user.planType === 'premium' ? '★ Premium' : 'Free Plan'}
+                </span>
+              )}
+            </div>
           </div>
         )}
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto py-2">
-          {navItems.map(({ id, label, icon }) => (
-            <button
-              key={id}
-              onClick={() => onTabChange(id)}
-              title={!sidebarOpen ? label : ''}
-              className={`
-                w-full flex items-center px-4 py-3 text-sm font-medium transition-all duration-150
-                ${activeTab === id
-                  ? 'bg-white/25 text-white border-r-4 border-white font-bold'
-                  : 'text-white/80 hover:bg-white/15 hover:text-white'}
-              `}
-            >
-              <span className="text-lg flex-shrink-0">{icon}</span>
-              {sidebarOpen && <span className="ml-3 whitespace-nowrap">{label}</span>}
-            </button>
-          ))}
+          {navItems.map(({ id, label, icon, premium }) => {
+            const isLocked = premium && isFree && user?.userType === 'parent';
+            return (
+              <button
+                key={id}
+                onClick={() => onTabChange(id)}
+                title={!sidebarOpen ? (isLocked ? `${label} — Premium` : label) : (isLocked ? 'Premium feature — Upgrade to access' : '')}
+                className={`
+                  w-full flex items-center px-4 py-3 text-sm font-medium transition-all duration-150
+                  ${activeTab === id
+                    ? 'bg-white/25 text-white border-r-4 border-white font-bold'
+                    : isLocked
+                      ? 'text-white/50 hover:bg-white/10 hover:text-white/70 cursor-pointer'
+                      : 'text-white/80 hover:bg-white/15 hover:text-white'}
+                `}
+              >
+                <span className="text-lg flex-shrink-0">{icon}</span>
+                {sidebarOpen && (
+                  <span className="ml-3 flex-1 flex items-center justify-between whitespace-nowrap">
+                    {label}
+                    {isLocked && (
+                      <span className="text-xs bg-yellow-400/20 text-yellow-200 px-1.5 py-0.5 rounded-full border border-yellow-300/30 ml-1">
+                        🔒 Pro
+                      </span>
+                    )}
+                  </span>
+                )}
+                {!sidebarOpen && isLocked && (
+                  <span className="absolute left-8 top-0 text-[8px] text-yellow-300">🔒</span>
+                )}
+              </button>
+            );
+          })}
         </nav>
+
+        {/* Upgrade button for free parents */}
+        {isFree && sidebarOpen && (
+          <div className="px-3 pb-2">
+            <button
+              onClick={() => router.push('/upgrade')}
+              className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-xs font-bold px-3 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all shadow"
+            >
+              ⭐ Upgrade to Premium
+            </button>
+          </div>
+        )}
 
         {/* Logout */}
         <div className="p-3 border-t border-white/20">

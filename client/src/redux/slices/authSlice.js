@@ -67,6 +67,18 @@ export const getProfile = createAsyncThunk(
   }
 );
 
+export const upgradePlan = createAsyncThunk(
+  'auth/upgradePlan',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await apiService.upgradePlan();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   user: null,
   token: null,
@@ -158,6 +170,11 @@ const authSlice = createSlice({
         state.isHydrating = false;
         apiService.removeToken();
         apiService.removeRefreshToken();
+      })
+      .addCase(upgradePlan.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user = { ...state.user, planType: action.payload.user.planType };
+        }
       });
   },
 });

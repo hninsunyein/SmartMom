@@ -17,6 +17,8 @@ import { Child } from './database/entities/child.entity';
 import { AdvisorAvailability } from './database/entities/advisor-availability.entity';
 import { GrowthTracking } from './database/entities/growth-tracking.entity';
 import { NutritionPlan } from './database/entities/nutrition-plan.entity';
+import { ParentMealSelection } from './database/entities/parent-meal-selection.entity';
+import { SelectedMealPlanItem } from './database/entities/selected-meal-plan-item.entity';
 import { Appointment } from './database/entities/appointment.entity';
 import { Tip } from './database/entities/tip.entity';
 
@@ -34,6 +36,7 @@ import { Tip } from './database/entities/tip.entity';
       database: process.env.DB_DATABASE,
       entities: [
         User, Child, AdvisorAvailability, GrowthTracking, NutritionPlan,
+        ParentMealSelection, SelectedMealPlanItem,
         Appointment, Tip,
       ],
       synchronize: process.env.NODE_ENV === 'development',

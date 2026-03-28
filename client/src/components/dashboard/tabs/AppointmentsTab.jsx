@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAppointments, bookAppointment, approveAppointment, rejectAppointment, cancelAppointment } from '../../../redux/slices/appointmentsSlice';
+import { fetchAppointments, bookAppointment, approveAppointment, rejectAppointment, cancelAppointment, saveAppointmentNotes } from '../../../redux/slices/appointmentsSlice';
 import apiService from '../../../services/api';
 
 const TIME_SLOTS = [
@@ -28,6 +28,10 @@ export default function AppointmentsTab() {
   const [advisors, setAdvisors] = useState([]);
   const [form, setForm] = useState({ advisorId: '', childId: '', appointmentDate: '', appointmentTime: '09:00', timeSlot: 'morning', reason: '' });
   const [saving, setSaving] = useState(false);
+  const [notesModal, setNotesModal] = useState(null); // { appt }
+  const [notesText, setNotesText] = useState('');
+  const [notesSaving, setNotesSaving] = useState(false);
+  const [notesSaved, setNotesSaved] = useState(false);
 
   useEffect(() => {
     dispatch(fetchAppointments());
@@ -46,6 +50,36 @@ export default function AppointmentsTab() {
       setForm({ advisorId: '', childId: '', appointmentDate: '', appointmentTime: '09:00', timeSlot: 'morning', reason: '' });
     } catch (err) { console.error(err); }
     finally { setSaving(false); }
+  };
+
+  const openNotes = (appt) => {
+    setNotesModal(appt);
+    setNotesText(appt.notes || '');
+    setNotesSaved(false);
+  };
+
+  const handleSaveNotes = async () => {
+    if (!notesModal) return;
+    setNotesSaving(true);
+    try {
+      await dispatch(saveAppointmentNotes({ id: notesModal.id, notes: notesText })).unwrap();
+      setNotesSaved(true);
+      setTimeout(() => setNotesSaved(false), 2000);
+    } catch (e) { console.error(e); }
+    finally { setNotesSaving(false); }
+  };
+
+  const insertFormat = (tag) => {
+    const ta = document.getElementById('notes-editor');
+    if (!ta) return;
+    const start = ta.selectionStart;
+    const end   = ta.selectionEnd;
+    const sel   = notesText.substring(start, end);
+    const wrap  = { bold: ['**', '**'], italic: ['_', '_'], bullet: ['• ', ''] };
+    const [pre, post] = wrap[tag] || ['', ''];
+    const newText = notesText.substring(0, start) + pre + sel + post + notesText.substring(end);
+    setNotesText(newText);
+    setTimeout(() => { ta.focus(); ta.setSelectionRange(start + pre.length, end + pre.length); }, 0);
   };
 
   const isParent = user?.userType === 'parent';
@@ -122,16 +156,28 @@ export default function AppointmentsTab() {
             <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
               <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow">All Appointments</div>
               {[...confirmedList, ...otherList].map(appt => (
-                <div key={appt.id} className="bg-gradient-to-r from-blue-400 to-blue-600 text-white px-4 py-3 rounded-xl mb-2 text-sm flex justify-between items-start flex-wrap gap-2.5">
-                  <div>
-                    <strong>{appt.parent?.fullName || 'Parent'}</strong>
-                    <div className="text-[0.85rem] mt-1">
-                      📅 {formatDate(appt.appointmentDate)} ⏰ {appt.appointmentTime}
+                <div key={appt.id} className="bg-white border border-gray-200 rounded-xl mb-3 overflow-hidden shadow-sm">
+                  <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white px-4 py-2.5 flex justify-between items-center flex-wrap gap-2">
+                    <strong className="text-sm">{appt.parent?.fullName || 'Parent'}</strong>
+                    <div className="flex items-center gap-2">
+                      <span className={`status-${appt.status} text-xs`}>{appt.status}</span>
+                      <button onClick={() => openNotes(appt)}
+                        className="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-3 py-1 rounded-lg transition-all border border-white/30">
+                        📝 Notes
+                      </button>
                     </div>
-                    {appt.child && <div className="text-[0.85rem]">Child: {appt.child.name}</div>}
-                    {appt.reason && <div className="text-[0.85rem] italic">"{appt.reason}"</div>}
                   </div>
-                  <span className={`status-${appt.status}`}>{appt.status}</span>
+                  <div className="px-4 py-3 text-sm text-[#2d3436]">
+                    <div className="mb-1">📅 {formatDate(appt.appointmentDate)} ⏰ {appt.appointmentTime}</div>
+                    {appt.child && <div className="mb-1">👶 Child: {appt.child.name}</div>}
+                    {appt.reason && <div className="text-[#636e72] italic mb-1">"{appt.reason}"</div>}
+                    {appt.notes && (
+                      <div className="mt-2 bg-amber-50 border-l-4 border-amber-400 px-3 py-2 rounded-r-lg text-[0.82rem] text-[#2d3436]">
+                        <span className="font-semibold text-amber-700">Notes: </span>
+                        <span className="whitespace-pre-wrap">{appt.notes.length > 120 ? appt.notes.substring(0, 120) + '…' : appt.notes}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -154,6 +200,12 @@ export default function AppointmentsTab() {
                   </div>
                   {appt.child && <div className="bg-gray-50 border-l-4 border-[#667eea] px-3 py-2 rounded-r-xl mb-2 text-sm">👶 Child: {appt.child.name}</div>}
                   {appt.reason && <div className="bg-gray-50 border-l-4 border-[#667eea] px-3 py-2 rounded-r-xl mb-2 text-sm italic">"{appt.reason}"</div>}
+                  {appt.notes && (
+                    <div className="bg-amber-50 border-l-4 border-amber-400 px-3 py-2.5 rounded-r-xl mb-2 text-sm">
+                      <div className="font-semibold text-amber-700 mb-1">📝 Doctor's Notes</div>
+                      <div className="text-[#2d3436] whitespace-pre-wrap leading-relaxed">{appt.notes}</div>
+                    </div>
+                  )}
                   <span className="status-approved">Approved</span>
                 </div>
               ))}
@@ -198,6 +250,60 @@ export default function AppointmentsTab() {
             </div>
           )}
         </>
+      )}
+
+      {/* Notes Modal */}
+      {notesModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-auto shadow-2xl">
+            <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-t-2xl flex justify-between items-center">
+              <span>📝 Appointment Notes</span>
+              <button onClick={() => setNotesModal(null)} className="text-white/80 hover:text-white text-xl leading-none">✕</button>
+            </div>
+            <div className="p-5">
+              <div className="mb-3 text-sm text-[#636e72]">
+                <strong className="text-[#2d3436]">{notesModal.parent?.fullName || 'Parent'}</strong>
+                {' — '}{formatDate(notesModal.appointmentDate)} {notesModal.appointmentTime}
+                {notesModal.child && <span> · {notesModal.child.name}</span>}
+              </div>
+
+              {/* Formatting toolbar */}
+              <div className="flex gap-2 mb-2">
+                {[
+                  { tag: 'bold',   label: 'B',  title: 'Bold' },
+                  { tag: 'italic', label: 'I',  title: 'Italic' },
+                  { tag: 'bullet', label: '•',  title: 'Bullet' },
+                ].map(({ tag, label, title }) => (
+                  <button key={tag} title={title} onClick={() => insertFormat(tag)}
+                    className="w-8 h-8 rounded-lg border border-[#667eea] text-[#667eea] font-bold text-sm hover:bg-[#667eea] hover:text-white transition-all">
+                    {label}
+                  </button>
+                ))}
+                <span className="ml-auto text-xs text-[#b2bec3] self-center">Supports **bold**, _italic_, • bullets</span>
+              </div>
+
+              <textarea
+                id="notes-editor"
+                value={notesText}
+                onChange={e => setNotesText(e.target.value)}
+                rows={10}
+                placeholder="Write doctor suggestions, observations, and notes here..."
+                className="w-full px-4 py-3 border-2 border-[#667eea] rounded-xl focus:outline-none focus:border-[#764ba2] text-sm transition-colors resize-y font-mono"
+              />
+
+              <div className="flex gap-2.5 mt-4">
+                <button onClick={() => setNotesModal(null)}
+                  className="flex-1 py-2.5 border-2 border-[#667eea] rounded-xl bg-white text-[#667eea] font-semibold text-sm">
+                  Cancel
+                </button>
+                <button onClick={handleSaveNotes} disabled={notesSaving}
+                  className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm disabled:opacity-55">
+                  {notesSaving ? 'Saving…' : notesSaved ? '✓ Saved!' : 'Save Notes'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Book Appointment Modal */}

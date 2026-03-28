@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, Request, HttpCode } from '@nestjs/common';
+import { Controller, Post, Get, Put, Body, UseGuards, Request, HttpCode } from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -57,5 +57,11 @@ export class AuthController {
   @HttpCode(200)
   async logout(@Request() req) {
     return this.authService.logout(req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('upgrade')
+  async upgradePlan(@Request() req) {
+    return this.authService.upgradePlan(req.user.id);
   }
 }

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsInt, Min, Max, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsInt, Min, Max, Matches, MinLength, isPhoneNumber, IsPhoneNumber } from 'class-validator';
 
 export class RegisterParentDto {
   @IsEmail({}, { message: 'Please provide a valid email address' })
@@ -20,4 +20,7 @@ export class RegisterParentDto {
   @Min(25, { message: 'Age must be at least 25' })
   @Max(42, { message: 'Age must be at most 42' })
   age: number;
+
+  @IsPhoneNumber()
+  phone:string;
 }

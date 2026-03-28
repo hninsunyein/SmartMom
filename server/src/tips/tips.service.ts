@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tip } from '../database/entities/tip.entity';
@@ -22,5 +22,20 @@ export class TipsService {
     const tip = this.tipRepository.create(data);
     const saved = await this.tipRepository.save(tip);
     return { success: true, data: saved };
+  }
+
+  async update(id: number, data: any) {
+    const tip = await this.tipRepository.findOne({ where: { id } });
+    if (!tip) throw new NotFoundException('Tip not found');
+    Object.assign(tip, data);
+    const saved = await this.tipRepository.save(tip);
+    return { success: true, data: saved };
+  }
+
+  async remove(id: number) {
+    const tip = await this.tipRepository.findOne({ where: { id } });
+    if (!tip) throw new NotFoundException('Tip not found');
+    await this.tipRepository.remove(tip);
+    return { success: true, message: 'Tip deleted' };
   }
 }

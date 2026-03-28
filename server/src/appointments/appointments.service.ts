@@ -46,4 +46,13 @@ export class AppointmentsService {
     const saved = await this.appointmentRepository.save(appt);
     return { success: true, data: saved };
   }
+
+  async updateNotes(id: number, advisorId: number, notes: string) {
+    const appt = await this.appointmentRepository.findOne({ where: { id } });
+    if (!appt) throw new NotFoundException('Appointment not found');
+    if (appt.advisorId !== advisorId) throw new ForbiddenException('Access denied');
+    appt.notes = notes;
+    const saved = await this.appointmentRepository.save(appt);
+    return { success: true, data: saved };
+  }
 }
