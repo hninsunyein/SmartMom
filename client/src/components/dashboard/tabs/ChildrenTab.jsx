@@ -5,6 +5,31 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { fetchChildren, addChild, deleteChild } from '../../../redux/slices/childrenSlice';
 
+function ConfirmModal({ message, onConfirm, onCancel }) {
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
+        <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] px-6 py-4">
+          <p className="text-white font-bold text-base">Confirm Action</p>
+        </div>
+        <div className="p-6">
+          <p className="text-gray-700 text-sm mb-6">{message}</p>
+          <div className="flex gap-3">
+            <button onClick={onCancel}
+              className="flex-1 py-2.5 border-2 border-[#667eea] text-[#667eea] font-semibold rounded-xl hover:bg-[#667eea]/5 active:scale-95 transition-all text-sm">
+              Cancel
+            </button>
+            <button onClick={onConfirm}
+              className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function calcAge(dob) {
   if (!dob) return '';
   const years = Math.floor((Date.now() - new Date(dob).getTime()) / (1000 * 60 * 60 * 24 * 365.25));
@@ -64,6 +89,7 @@ export default function ChildrenTab() {
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [confirmId, setConfirmId] = useState(null);
 
   const isFree = user?.userType === 'parent' && user?.planType !== 'premium';
   const isPremium = user?.planType === 'premium';
@@ -96,13 +122,22 @@ export default function ChildrenTab() {
     finally { setSaving(false); }
   };
 
-  const handleDelete = (id) => { if (confirm('Remove this child?')) dispatch(deleteChild(id)); };
+  const handleDelete = (id) => setConfirmId(id);
+  const handleConfirmDelete = () => { dispatch(deleteChild(confirmId)); setConfirmId(null); };
+  const handleCancelDelete = () => setConfirmId(null);
 
   const inputCls = 'w-full px-4 py-2.5 border-2 border-[#667eea] rounded-xl focus:outline-none focus:border-[#764ba2] focus:ring-2 focus:ring-[#667eea]/20 text-sm transition-colors';
   const labelCls = 'block text-[#764ba2] font-semibold mb-1 text-sm';
 
   return (
     <div>
+      {confirmId && (
+        <ConfirmModal
+          message="Are you sure to remove?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold text-lg px-5 py-3 rounded-xl shadow flex-1">

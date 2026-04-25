@@ -8,9 +8,6 @@ RUN npm ci --silent
 
 COPY . .
 
-ARG BACKEND_URL=http://backend:5000
-ENV BACKEND_URL=$BACKEND_URL
-
 RUN npm run build
 
 # Production stage

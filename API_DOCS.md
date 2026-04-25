@@ -598,8 +598,10 @@ All errors follow this format:
 
 | Role | Email | Password |
 |------|-------|----------|
-| Parent | `parent@test.com` | `password` |
-| Advisor | `advisor@test.com` | `password` |
+| Free Parent | `parent@smartmom.com ` | `Parentfree@123` |
+| Premium Parent | `parentv2@smartmom.com` | `Parentpremium@123` |
+| Advisor | `advisor@smartmom.com` | `Advisor@123` |
+| Admin | `admin@smartmom.com` | `Admin@123` |
 
 ---
 
