@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { upgradePlan } from '../../redux/slices/authSlice';
+import { CheckCircle, Star, Clipboard, Sparkles } from 'lucide-react';
 
 const FREE_FEATURES = [
   '1 child profile',
@@ -70,13 +71,13 @@ export default function UpgradePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f5f7ff] to-[#ede9ff] flex flex-col items-center px-4 py-10">
+    <div className="min-h-screen bg-gradient-to-br from-[#FAFAFA] to-[#F0F9F5] flex flex-col items-center px-4 py-10">
 
       {/* Header */}
       <div className="w-full max-w-4xl mb-8 flex items-center gap-3">
         <button
           onClick={() => router.push('/dashboard')}
-          className="text-[#667eea] hover:text-[#764ba2] font-semibold text-sm flex items-center gap-1.5 transition-colors"
+          className="text-[#8BA888] hover:text-[#6D8A6A] font-semibold text-sm flex items-center gap-1.5 transition-colors"
         >
           ← Back to Dashboard
         </button>
@@ -86,19 +87,21 @@ export default function UpgradePage() {
 
         {/* Title */}
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Upgrade to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#667eea] to-[#764ba2]">Premium</span></h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Upgrade to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8BA888] to-[#6D8A6A]">Premium</span></h1>
           <p className="text-gray-500 text-sm">Unlock the full Smart Mom experience for your family</p>
         </div>
 
         {/* Already Premium */}
         {isPremium && (
           <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-2xl p-8 text-center mb-8">
-            <div className="text-5xl mb-3">✅</div>
+            <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <CheckCircle className="w-10 h-10 text-white" />
+            </div>
             <h2 className="text-xl font-bold text-emerald-700 mb-2">You're already on Premium!</h2>
             <p className="text-emerald-600 text-sm mb-5">All premium features are unlocked for your account.</p>
             <button
               onClick={() => router.push('/dashboard')}
-              className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 active:scale-95 transition-all"
+              className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 active:scale-95 transition-all"
             >
               Go to Dashboard
             </button>
@@ -108,12 +111,14 @@ export default function UpgradePage() {
         {/* Success State */}
         {success && !isPremium && (
           <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-2xl p-8 text-center mb-8">
-            <div className="text-5xl mb-3">🎉</div>
+            <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Sparkles className="w-10 h-10 text-white" />
+            </div>
             <h2 className="text-xl font-bold text-emerald-700 mb-2">Welcome to Premium!</h2>
             <p className="text-emerald-600 text-sm mb-5">All premium features are now unlocked. Enjoy Smart Mom Premium!</p>
             <button
               onClick={() => router.push('/dashboard')}
-              className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 active:scale-95 transition-all"
+              className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 active:scale-95 transition-all"
             >
               Go to Dashboard
             </button>
@@ -128,7 +133,9 @@ export default function UpgradePage() {
               {/* Free Plan */}
               <div className="bg-white rounded-2xl border-2 border-gray-200 p-6 shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-xl">📋</div>
+                  <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+                    <Clipboard className="w-5 h-5 text-gray-600" />
+                  </div>
                   <div>
                     <h3 className="font-bold text-gray-800">Free Plan</h3>
                     <p className="text-gray-400 text-sm font-semibold">0 MMK / forever</p>
@@ -145,28 +152,30 @@ export default function UpgradePage() {
               </div>
 
               {/* Premium Plan */}
-              <div className="bg-gradient-to-br from-[#667eea]/5 to-[#764ba2]/10 rounded-2xl border-2 border-[#667eea] p-6 shadow-md relative overflow-hidden">
-                <div className="absolute top-4 right-4 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white text-xs font-bold px-3 py-1 rounded-full">
+              <div className="bg-gradient-to-br from-[#8BA888]/5 to-[#6D8A6A]/10 rounded-2xl border-2 border-[#8BA888] p-6 shadow-md relative overflow-hidden">
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white text-xs font-bold px-3 py-1 rounded-full">
                   RECOMMENDED
                 </div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center text-xl">⭐</div>
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8BA888] to-[#6D8A6A] flex items-center justify-center">
+                    <Star className="w-5 h-5 text-white" />
+                  </div>
                   <div>
                     <h3 className="font-bold text-gray-800">Premium Plan</h3>
-                    <p className="text-[#667eea] text-sm font-bold">5,000 MMK / one-time</p>
+                    <p className="text-[#8BA888] text-sm font-bold">5,000 MMK / one-time</p>
                   </div>
                 </div>
                 <ul className="space-y-2.5">
                   {PREMIUM_FEATURES.map((f, i) => (
                     <li key={f} className="flex items-start gap-2 text-sm text-gray-700">
-                      <span className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center ${i === 0 ? 'text-[#667eea] font-bold text-base leading-none' : 'bg-gradient-to-br from-[#667eea] to-[#764ba2]'}`}>
+                      <span className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center ${i === 0 ? 'text-[#8BA888] font-bold text-base leading-none' : 'bg-gradient-to-br from-[#8BA888] to-[#6D8A6A]'}`}>
                         {i === 0 ? '↑' : (
                           <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         )}
                       </span>
-                      <span className={i === 0 ? 'font-semibold text-[#667eea]' : ''}>{f}</span>
+                      <span className={i === 0 ? 'font-semibold text-[#8BA888]' : ''}>{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -179,7 +188,7 @@ export default function UpgradePage() {
               <div className="space-y-3">
                 {PAYMENT_STEPS.map(({ step, text }) => (
                   <div key={step} className="flex items-start gap-3">
-                    <span className="w-7 h-7 rounded-full bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="w-7 h-7 rounded-full bg-gradient-to-br from-[#8BA888] to-[#6D8A6A] text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                       {step}
                     </span>
                     <p className="text-sm text-gray-600 leading-relaxed">{text}</p>
@@ -193,7 +202,7 @@ export default function UpgradePage() {
                   type="checkbox"
                   checked={confirmed}
                   onChange={(e) => { setConfirmed(e.target.checked); setError(''); }}
-                  className="w-5 h-5 rounded border-2 border-[#667eea] accent-[#667eea] cursor-pointer"
+                  className="w-5 h-5 rounded border-2 border-[#8BA888] accent-[#8BA888] cursor-pointer"
                 />
                 <span className="text-sm text-gray-700 group-hover:text-gray-900">
                   I have completed the payment of <strong>5,000 MMK</strong> and understand it is non-refundable.
@@ -218,9 +227,14 @@ export default function UpgradePage() {
               <button
                 onClick={handleUpgrade}
                 disabled={loading}
-                className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold py-3.5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm disabled:opacity-55 shadow-lg shadow-[#667eea]/30"
+                className="flex-1 bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold py-3.5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm disabled:opacity-55 shadow-lg shadow-[#8BA888]/30 flex items-center justify-center gap-2"
               >
-                {loading ? 'Activating...' : '⭐ Confirm & Activate Premium'}
+                {loading ? 'Activating...' : (
+                  <>
+                    <Star className="w-4 h-4" />
+                    <span>Confirm & Activate Premium</span>
+                  </>
+                )}
               </button>
             </div>
 

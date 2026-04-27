@@ -1,4 +1,4 @@
-// File: C:\Users\hsnye\Downloads\Smart-Mom-Balancing-System\client\src\app\page.jsx
+// File: /Users/zawwaisoe/Desktop/HSN Projec/SmartMom/client/src/app/page.jsx
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

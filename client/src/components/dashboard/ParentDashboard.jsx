@@ -22,26 +22,30 @@ const PREMIUM_TABS = new Set(['appointments', 'advisors']);
 function UpgradeModal({ feature, onClose, onUpgrade }) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] px-6 py-5 text-white text-center">
-          <div className="text-5xl mb-2">🔒</div>
+      <div className="bg-white rounded-xl w-full max-w-md shadow-2xl overflow-hidden border border-[#E2E8F0]">
+        <div className="bg-gradient-to-r from-[#FF9B8F] to-[#E87B6F] px-6 py-6 text-white text-center">
+          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
           <h2 className="text-xl font-bold">Premium Feature</h2>
-          <p className="text-white/80 text-sm mt-1">{feature} is available on the Premium plan</p>
+          <p className="text-white/90 text-sm mt-1">{feature} is available on the Premium plan</p>
         </div>
         <div className="p-6">
-          <p className="text-gray-600 text-sm mb-5 text-center">
-            Upgrade to <strong>Premium (5,000 MMK)</strong> to unlock:
+          <p className="text-[#64748B] text-sm mb-5 text-center">
+            Upgrade to <strong className="text-[#2C3E50]">Premium (5,000 MMK)</strong> to unlock:
           </p>
           <ul className="space-y-2.5 mb-6">
             {[
-              '📅 Book appointments with advisors',
-              '👨‍⚕️ Browse and connect with advisors',
-              '👶 Multiple children profiles (unlimited)',
-              '📊 BMI-based personalized meal plans',
-              '📝 Save advisor notes and history',
+              'Book appointments with advisors',
+              'Browse and connect with advisors',
+              'Multiple children profiles (unlimited)',
+              'BMI-based personalized meal plans',
+              'Save advisor notes and history',
             ].map((item) => (
-              <li key={item} className="flex items-center gap-2.5 text-sm text-gray-700">
-                <span className="w-5 h-5 rounded-full bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center flex-shrink-0">
+              <li key={item} className="flex items-center gap-2.5 text-sm text-[#2C3E50]">
+                <span className="w-5 h-5 rounded-full bg-[#8BA888] flex items-center justify-center flex-shrink-0">
                   <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
@@ -53,13 +57,13 @@ function UpgradeModal({ feature, onClose, onUpgrade }) {
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 py-2.5 border-2 border-gray-200 text-gray-500 font-semibold rounded-xl hover:bg-gray-50 transition-colors text-sm"
+              className="flex-1 py-2.5 border-2 border-[#E2E8F0] text-[#64748B] font-semibold rounded-lg hover:border-[#FF9B8F] hover:text-[#FF9B8F] transition-colors text-sm"
             >
               Maybe Later
             </button>
             <button
               onClick={onUpgrade}
-              className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm"
+              className="flex-1 bg-[#FF9B8F] text-white font-semibold py-2.5 rounded-lg hover:bg-[#E87B6F] transition-all text-sm"
             >
               Upgrade Now
             </button>

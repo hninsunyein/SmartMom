@@ -130,13 +130,13 @@ function MonthlyBlockModal({ onDelete, onCancel, onViewPlan, deleting }) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
           </svg>
         </div>
-        <h3 className="text-gray-800 font-bold text-center mb-2">Meal Plan Already Exists</h3>
-        <p className="text-gray-500 text-sm text-center mb-5">
+        <h3 className="text-[#2C3E50] font-bold text-center mb-2">Meal Plan Already Exists</h3>
+        <p className="text-[#64748B] text-sm text-center mb-5">
           You have already generated a meal plan this month. Delete the existing plan to generate a new one.
         </p>
         <div className="space-y-2">
           <button onClick={onViewPlan}
-            className="w-full px-4 py-2 rounded-xl bg-[#667eea] text-white font-semibold text-sm hover:opacity-90">
+            className="w-full px-4 py-2 rounded-xl bg-[#8BA888] text-white font-semibold text-sm hover:opacity-90">
             View Current Plan
           </button>
           <button onClick={onDelete} disabled={deleting}
@@ -144,7 +144,7 @@ function MonthlyBlockModal({ onDelete, onCancel, onViewPlan, deleting }) {
             {deleting ? 'Deleting...' : 'Delete Plan and Generate New'}
           </button>
           <button onClick={onCancel}
-            className="w-full px-4 py-2 rounded-xl border-2 border-gray-200 text-gray-500 font-semibold text-sm hover:bg-gray-50">
+            className="w-full px-4 py-2 rounded-xl border-2 border-[#E2E8F0] text-[#64748B] font-semibold text-sm hover:bg-gray-50">
             Cancel
           </button>
         </div>
@@ -159,17 +159,17 @@ function ReplaceConfirmModal({ onConfirm, onCancel }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-2xl p-6 shadow-xl max-w-sm w-full mx-4">
-        <h3 className="text-gray-800 font-bold text-center mb-2">Replace Existing Plan?</h3>
-        <p className="text-gray-500 text-sm text-center mb-5">
+        <h3 className="text-[#2C3E50] font-bold text-center mb-2">Replace Existing Plan?</h3>
+        <p className="text-[#64748B] text-sm text-center mb-5">
           You already have a saved meal plan for this child. Saving will replace it.
         </p>
         <div className="flex gap-3">
           <button onClick={onCancel}
-            className="flex-1 px-4 py-2 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50">
+            className="flex-1 px-4 py-2 rounded-xl border-2 border-[#E2E8F0] text-[#64748B] font-semibold text-sm hover:bg-gray-50">
             Cancel
           </button>
           <button onClick={onConfirm}
-            className="flex-1 px-4 py-2 rounded-xl bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold text-sm hover:opacity-90">
+            className="flex-1 px-4 py-2 rounded-xl bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold text-sm hover:opacity-90">
             Replace
           </button>
         </div>
@@ -196,13 +196,13 @@ function WeekPlannerGrid({ weekPlan, setWeekPlan, mealPlan, activeWeek, setActiv
   return (
     <div>
       {/* Week tabs */}
-      <div className="flex gap-2 mb-5 border-b border-gray-100 pb-3">
+      <div className="flex gap-2 mb-5 border-b border-[#E2E8F0] pb-3">
         {[1, 2, 3, 4].map(w => (
           <button key={w} onClick={() => setActiveWeek(w)}
             className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all ${
               activeWeek === w
-                ? 'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white shadow'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white shadow'
+                : 'bg-gray-100 text-[#64748B] hover:bg-gray-200'
             }`}>
             Week {w}
           </button>
@@ -216,23 +216,23 @@ function WeekPlannerGrid({ weekPlan, setWeekPlan, mealPlan, activeWeek, setActiv
           const cell = weekPlan?.[activeWeek]?.[day] || {};
           return (
             <div key={day} className="py-4">
-              <div className="text-sm font-bold text-[#764ba2] mb-3 uppercase tracking-wide">{dayLabel}</div>
+              <div className="text-sm font-bold text-[#2C3E50] mb-3 uppercase tracking-wide">{dayLabel}</div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {MEAL_TIMES.map(mt => (
                   <div key={mt}>
                     <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
                       {MEAL_LABELS[mt]}
                     </div>
-                    <div className={`text-sm text-gray-700 bg-gray-50 border border-gray-100 rounded-xl px-3 py-2.5 leading-relaxed min-h-[48px] ${!readOnly && mealPlan ? 'pr-16' : ''} relative`}>
+                    <div className={`text-sm text-gray-700 bg-gray-50 border border-[#E2E8F0] rounded-xl px-3 py-2.5 leading-relaxed min-h-[48px] ${!readOnly && mealPlan ? 'pr-16' : ''} relative`}>
                       <span>{cell[mt] || '—'}</span>
                       {!readOnly && mealPlan && (
                         <div className="absolute right-1 top-1 flex gap-0.5">
                           <button onClick={() => cycleOption(activeWeek, day, mt, -1)}
-                            className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-500 text-xs font-bold flex items-center justify-center leading-none">
+                            className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-[#64748B] text-xs font-bold flex items-center justify-center leading-none">
                             &lt;
                           </button>
                           <button onClick={() => cycleOption(activeWeek, day, mt, 1)}
-                            className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-500 text-xs font-bold flex items-center justify-center leading-none">
+                            className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-[#64748B] text-xs font-bold flex items-center justify-center leading-none">
                             &gt;
                           </button>
                         </div>
@@ -260,11 +260,11 @@ function MealOptionSelector({ label, options, selected, onChange }) {
           <button key={i} onClick={() => onChange(option)}
             className={`w-full text-left px-4 py-2.5 rounded-xl text-sm border-2 transition-all ${
               selected === option
-                ? 'border-[#667eea] bg-purple-50 text-[#764ba2] font-semibold'
-                : 'border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-200'
+                ? 'border-[#8BA888] bg-[#F0F9F5] text-[#2C3E50] font-semibold'
+                : 'border-[#E2E8F0] bg-gray-50 text-[#64748B] hover:border-[#E2E8F0]'
             }`}>
             {selected === option && (
-              <svg className="inline w-3.5 h-3.5 mr-1.5 text-[#667eea]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <svg className="inline w-3.5 h-3.5 mr-1.5 text-[#8BA888]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             )}
@@ -296,9 +296,9 @@ function HistoryPanel({ history, onView }) {
     <div className="space-y-3">
       {history.map((entry, i) => (
         <div key={`${entry.year}-${entry.month}`}
-          className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm flex items-center justify-between">
+          className="bg-white border border-[#E2E8F0] rounded-xl p-4 shadow-sm flex items-center justify-between">
           <div>
-            <div className="font-semibold text-gray-800 text-sm">{entry.monthLabel}</div>
+            <div className="font-semibold text-[#2C3E50] text-sm">{entry.monthLabel}</div>
             <div className="text-xs text-gray-400 mt-0.5">
               Age group: {AGE_GROUPS.find(a => a.value === entry.ageGroup)?.label || entry.ageGroup}
               {entry.goals?.length > 0 && (
@@ -310,7 +310,7 @@ function HistoryPanel({ history, onView }) {
             <div className="text-xs text-gray-300 mt-0.5">{entry.recordCount} day records</div>
           </div>
           <button onClick={() => onView(entry)}
-            className="text-xs px-3 py-1.5 rounded-lg border border-[#667eea] text-[#667eea] font-semibold hover:bg-purple-50 whitespace-nowrap">
+            className="text-xs px-3 py-1.5 rounded-lg border border-[#8BA888] text-[#8BA888] font-semibold hover:bg-[#F0F9F5] whitespace-nowrap">
             View Plan
           </button>
         </div>
@@ -333,20 +333,20 @@ function ShoppingListPanel({ items, onClose }) {
     <div>
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="font-bold text-gray-800">Shopping List</h3>
+          <h3 className="font-bold text-[#2C3E50]">Shopping List</h3>
           <p className="text-xs text-gray-400 mt-0.5">{items.length} unique ingredients</p>
         </div>
         <button onClick={onClose}
-          className="text-sm text-gray-400 hover:text-gray-600 border border-gray-200 px-3 py-1 rounded-lg">
+          className="text-sm text-gray-400 hover:text-[#64748B] border border-[#E2E8F0] px-3 py-1 rounded-lg">
           Close
         </button>
       </div>
       {Object.entries(grouped).sort().map(([letter, list]) => (
         <div key={letter} className="mb-4">
-          <div className="text-xs font-bold text-[#764ba2] mb-1.5 uppercase">{letter}</div>
+          <div className="text-xs font-bold text-[#2C3E50] mb-1.5 uppercase">{letter}</div>
           <div className="flex flex-wrap gap-2">
             {list.map((ing, i) => (
-              <span key={i} className="px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-xs">
+              <span key={i} className="px-2.5 py-1 bg-gray-50 border border-[#E2E8F0] text-[#64748B] rounded-lg text-xs">
                 {ing}
               </span>
             ))}
@@ -625,24 +625,24 @@ export default function NutritionTab() {
       )}
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow text-[1.3rem] flex items-center justify-between">
+      <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-6 py-4 rounded-lg mb-6 shadow-sm text-xl flex items-center justify-between">
         <span>Nutrition Planning System</span>
-        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${isPremium ? 'bg-yellow-400 text-yellow-900' : 'bg-white/20 text-white'}`}>
+        <span className={`text-xs font-semibold px-3 py-1 rounded-lg ${isPremium ? 'bg-amber-400 text-amber-900' : 'bg-white/20 text-white'}`}>
           {isPremium ? 'Premium' : 'Free'}
         </span>
       </div>
 
       {/* Section tabs */}
-      <div className="flex gap-2 mb-5">
+      <div className="flex gap-2 mb-6">
         {[
           { id: 'calculator', label: 'Nutrition Calculator' },
           { id: 'planner',    label: 'Meal Planner'         },
         ].map(s => (
           <button key={s.id} onClick={() => setActiveSection(s.id)}
-            className={`px-4 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+            className={`px-5 py-3 rounded-lg font-semibold text-sm transition-all ${
               s.id === activeSection
-                ? 'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white shadow'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'bg-[#8BA888] text-white shadow-sm'
+                : 'bg-white border-2 border-[#E2E8F0] text-[#64748B] hover:border-[#8BA888] hover:text-[#8BA888]'
             }`}>
             {s.label}
           </button>
@@ -652,33 +652,33 @@ export default function NutritionTab() {
       {/* ══ CALCULATOR ══════════════════════════════════════════════════════ */}
       {activeSection === 'calculator' && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-            <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow">
+          <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm">
+            <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow-sm">
               Calorie Calculator
             </div>
             <div className="mb-4">
-              <label className="block text-[#764ba2] font-semibold mb-1.5 text-sm">Food Item</label>
+              <label className="block text-[#2C3E50] font-semibold mb-1.5 text-sm">Food Item</label>
               <select value={foodItem} onChange={e => setFoodItem(e.target.value)}
-                className="w-full px-4 py-2.5 border-2 border-[#667eea] rounded-xl focus:outline-none focus:border-[#764ba2] text-sm">
+                className="w-full px-4 py-2.5 border-2 border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#8BA888] focus:ring-2 focus:ring-[#8BA888]/20 text-sm">
                 {FOOD_ITEMS.map(f => (
                   <option key={f.value} value={f.value}>{f.label} — {f.cal} kcal / 100g</option>
                 ))}
               </select>
             </div>
             <div className="mb-4">
-              <label className="block text-[#764ba2] font-semibold mb-1.5 text-sm">Amount (grams / ml)</label>
+              <label className="block text-[#2C3E50] font-semibold mb-1.5 text-sm">Amount (grams / ml)</label>
               <input type="number" value={amount} onChange={e => setAmount(+e.target.value)} min={1}
                 placeholder="100"
-                className="w-full px-4 py-2.5 border-2 border-[#667eea] rounded-xl focus:outline-none focus:border-[#764ba2] text-sm" />
+                className="w-full px-4 py-2.5 border-2 border-[#E2E8F0] rounded-xl focus:outline-none focus:border-[#8BA888] focus:ring-2 focus:ring-[#8BA888]/20 text-sm" />
             </div>
             <button onClick={calculate}
-              className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm">
+              className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-2.5 rounded-xl hover:bg-[#6D8A6A] active:scale-95 transition-all text-sm shadow-sm">
               Calculate
             </button>
           </div>
 
-          <div className={`rounded-2xl p-8 flex items-center justify-center min-h-[200px] text-center border-2 border-[#667eea] ${
-            calorieResult ? 'bg-gradient-to-br from-[#667eea] to-[#764ba2]' : 'bg-gray-50'}`}>
+          <div className={`rounded-2xl p-8 flex items-center justify-center min-h-[200px] text-center border-2 ${
+            calorieResult ? 'bg-gradient-to-br from-[#8BA888] to-[#6D8A6A] border-[#8BA888]' : 'bg-[#FAFAFA] border-[#E2E8F0]'}`}>
             {calorieResult ? (
               <div className="text-white">
                 <div className="text-sm mb-2 opacity-90">Total Calories</div>
@@ -734,7 +734,7 @@ export default function NutritionTab() {
 
           {/* Premium nav tabs */}
           {isPremium && (
-            <div className="flex gap-2 mb-5 border-b border-gray-100 pb-3">
+            <div className="flex gap-2 mb-5 border-b border-[#E2E8F0] pb-3">
               {[
                 { id: 'setup',    label: 'Setup'        },
                 { id: 'weekplan', label: '4-Week Plan'  },
@@ -744,8 +744,8 @@ export default function NutritionTab() {
                 <button key={v.id} onClick={() => setPlannerView(v.id)}
                   className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
                     plannerView === v.id
-                      ? 'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white shadow'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white shadow-sm'
+                      : 'bg-white border-2 border-[#E2E8F0] text-[#64748B] hover:border-[#8BA888] hover:text-[#8BA888]'
                   }`}>
                   {v.label}
                 </button>
@@ -758,8 +758,8 @@ export default function NutritionTab() {
             <div>
               {/* Child selector */}
               {children.length > 0 ? (
-                <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
-                  <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-4 shadow">
+                <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4">
+                  <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-4 shadow-sm">
                     Select Child
                   </div>
                   <div className="flex gap-3 flex-wrap">
@@ -770,12 +770,12 @@ export default function NutritionTab() {
                           onClick={() => setSelectedChildId(String(child.id))}
                           className={`px-4 py-3 rounded-xl text-left border-2 transition-all ${
                             String(selectedChildId) === String(child.id)
-                              ? 'border-[#667eea] bg-purple-50'
-                              : 'border-gray-200 hover:border-gray-300'
+                              ? 'border-[#8BA888] bg-[#F0F9F5]'
+                              : 'border-[#E2E8F0] hover:border-[#8BA888]/50'
                           }`}>
-                          <div className="text-sm font-semibold text-gray-800">{child.name}</div>
+                          <div className="text-sm font-semibold text-[#2C3E50]">{child.name}</div>
                           {ageYrs !== null && (
-                            <div className="text-xs text-gray-400 mt-0.5">
+                            <div className="text-xs text-[#64748B] mt-0.5">
                               {ageYrs} years old · {AGE_GROUPS.find(a => a.value === getAgeGroupFromDob(child.dateOfBirth))?.label}
                             </div>
                           )}
@@ -791,8 +791,8 @@ export default function NutritionTab() {
               )}
 
               {/* Age Group */}
-              <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
-                <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-4 shadow flex items-center justify-between">
+              <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4">
+                <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-4 shadow-sm flex items-center justify-between">
                   <span>Age Group</span>
                   {ageGroupAutoDetected && (
                     <span className="text-xs font-normal bg-white/20 px-2 py-0.5 rounded-full">
@@ -806,15 +806,15 @@ export default function NutritionTab() {
                       onClick={() => { setAgeGroup(ag.value); setAgeGroupAutoDetected(false); }}
                       className={`px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
                         ageGroup === ag.value
-                          ? 'border-[#667eea] bg-purple-50 text-[#764ba2]'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                          ? 'border-[#8BA888] bg-[#F0F9F5] text-[#8BA888]'
+                          : 'border-[#E2E8F0] text-[#64748B] hover:border-[#8BA888]/50'
                       }`}>
                       {ag.label}
                     </button>
                   ))}
                 </div>
                 {ageGroupAutoDetected && selectedChildId && (
-                  <div className="mt-3 text-xs text-gray-400">
+                  <div className="mt-3 text-xs text-[#64748B]">
                     Selected based on child's date of birth
                     {children.find(c => String(c.id) === String(selectedChildId))?.dateOfBirth &&
                       ` (age ${getAgeYears(children.find(c => String(c.id) === String(selectedChildId)).dateOfBirth)} years)`
@@ -824,8 +824,8 @@ export default function NutritionTab() {
               </div>
 
               {/* Nutrition Goals */}
-              <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
-                <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow">
+              <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4">
+                <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow-sm">
                   Nutrition Goals
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
@@ -836,10 +836,10 @@ export default function NutritionTab() {
                         className={`relative rounded-2xl p-5 text-left border-2 transition-all cursor-pointer hover:shadow-md ${
                           selected
                             ? `${goal.bg} ${goal.border} ring-2 ${goal.ring} shadow-md`
-                            : 'bg-white border-gray-200 hover:border-gray-300'
+                            : 'bg-white border-[#E2E8F0] hover:border-[#8BA888]/50'
                         }`}>
                         {selected && (
-                          <div className="absolute top-3 right-3 w-5 h-5 bg-[#667eea] rounded-full flex items-center justify-center">
+                          <div className="absolute top-3 right-3 w-5 h-5 bg-[#8BA888] rounded-full flex items-center justify-center">
                             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
@@ -848,8 +848,8 @@ export default function NutritionTab() {
                         <div className={`w-10 h-10 bg-gradient-to-br ${goal.color} rounded-xl flex items-center justify-center text-white font-bold text-sm mb-3`}>
                           {goal.abbr}
                         </div>
-                        <h4 className="font-bold text-gray-800 text-sm mb-1">{goal.label}</h4>
-                        <p className="text-gray-500 text-xs leading-relaxed">{goal.desc}</p>
+                        <h4 className="font-bold text-[#2C3E50] text-sm mb-1">{goal.label}</h4>
+                        <p className="text-[#64748B] text-xs leading-relaxed">{goal.desc}</p>
                       </button>
                     );
                   })}
@@ -857,7 +857,7 @@ export default function NutritionTab() {
 
                 {/* BMI */}
                 <div className="mb-5">
-                  <label className="flex items-center gap-2 text-[#764ba2] font-semibold mb-1.5 text-sm">
+                  <label className="flex items-center gap-2 text-[#2C3E50] font-semibold mb-1.5 text-sm">
                     BMI Value
                     {bmiAutoDetected && (
                       <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
@@ -872,28 +872,28 @@ export default function NutritionTab() {
                     type="number" step="0.01" min="0" value={bmiValue}
                     onChange={e => { setBmiValue(e.target.value); setBmiAutoDetected(false); }}
                     placeholder="e.g. 18.5"
-                    className={`w-40 px-4 py-2.5 border-2 rounded-xl focus:outline-none text-sm ${
+                    className={`w-40 px-4 py-2.5 border-2 rounded-xl focus:outline-none focus:ring-2 text-sm ${
                       bmiAutoDetected
-                        ? 'border-green-400 bg-green-50 focus:border-green-500'
-                        : 'border-[#667eea] focus:border-[#764ba2]'
+                        ? 'border-green-400 bg-green-50 focus:border-green-500 focus:ring-green-200'
+                        : 'border-[#E2E8F0] focus:border-[#8BA888] focus:ring-[#8BA888]/20'
                     }`}
                   />
                 </div>
 
                 <button onClick={handleGenerateClick}
                   disabled={loading || selectedGoals.length === 0}
-                  className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-6 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm disabled:opacity-50">
+                  className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-6 py-2.5 rounded-xl hover:bg-[#6D8A6A] active:scale-95 transition-all text-sm disabled:opacity-50 shadow-sm">
                   {loading ? 'Generating...' : isPremium ? 'Generate 4-Week Plan' : 'Generate Meal Plan'}
                 </button>
               </div>
 
               {/* Free: generated plan + select option + save */}
               {!isPremium && mealPlan && (
-                <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
-                  <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow">
+                <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4">
+                  <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow-sm">
                     Generated Plan — {mealPlan.ageGroupLabel || mealPlan.ageGroup}
                   </div>
-                  <p className="text-sm text-gray-500 mb-4">Select one option for each meal:</p>
+                  <p className="text-sm text-[#64748B] mb-4">Select one option for each meal:</p>
 
                   <MealOptionSelector label="Breakfast" options={mealPlan.breakfast}
                     selected={selectedMeals.breakfast}
@@ -915,11 +915,11 @@ export default function NutritionTab() {
                   <div className="flex gap-3 flex-wrap">
                     <button onClick={handleSave}
                       disabled={saving || !selectedMeals.breakfast || !selectedMeals.lunch || !selectedMeals.dinner}
-                      className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-2.5 rounded-xl hover:opacity-90 transition-all text-sm disabled:opacity-50">
+                      className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-2.5 rounded-xl hover:opacity-90 transition-all text-sm disabled:opacity-50">
                       {saving ? 'Saving...' : 'Save Plan'}
                     </button>
                     <button onClick={handleGenerateClick}
-                      className="bg-gray-100 text-gray-600 font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-200 transition-all text-sm">
+                      className="bg-gray-100 text-[#64748B] font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-200 transition-all text-sm">
                       Regenerate
                     </button>
                   </div>
@@ -928,8 +928,8 @@ export default function NutritionTab() {
 
               {/* Free: view current saved plan */}
               {!isPremium && viewingCurrentPlan && activePlan && (
-                <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
-                  <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow flex items-center justify-between">
+                <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4">
+                  <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow flex items-center justify-between">
                     <span>Current Saved Plan</span>
                     <button onClick={() => setViewingCurrentPlan(false)}
                       className="text-white/70 hover:text-white text-sm font-normal">
@@ -938,11 +938,11 @@ export default function NutritionTab() {
                   </div>
 
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="text-xs px-2.5 py-1 bg-[#f0eeff] text-[#667eea] rounded-lg font-semibold border border-[#a29bfe]">
+                    <span className="text-xs px-2.5 py-1 bg-[#f0eeff] text-[#8BA888] rounded-lg font-semibold border border-[#a29bfe]">
                       {AGE_GROUPS.find(a => a.value === activePlan.ageGroup)?.label || activePlan.ageGroup}
                     </span>
                     {(activePlan.nutritionGoal || '').split(',').filter(Boolean).map(g => (
-                      <span key={g} className="text-xs px-2.5 py-1 bg-gray-100 text-gray-600 rounded-lg">
+                      <span key={g} className="text-xs px-2.5 py-1 bg-gray-100 text-[#64748B] rounded-lg">
                         {GOALS.find(x => x.value === g)?.label || g}
                       </span>
                     ))}
@@ -955,8 +955,8 @@ export default function NutritionTab() {
                     {['breakfast', 'lunch', 'dinner'].map(mealTime => {
                       const item = activePlan.items?.find(i => i.mealTime === mealTime);
                       return (
-                        <div key={mealTime} className="bg-gray-50 border border-gray-100 rounded-xl p-4">
-                          <div className="text-xs font-bold text-[#764ba2] uppercase tracking-wide mb-2">
+                        <div key={mealTime} className="bg-gray-50 border border-[#E2E8F0] rounded-xl p-4">
+                          <div className="text-xs font-bold text-[#2C3E50] uppercase tracking-wide mb-2">
                             {MEAL_LABELS[mealTime]}
                           </div>
                           <p className="text-sm text-gray-700 leading-relaxed">
@@ -971,12 +971,12 @@ export default function NutritionTab() {
 
               {/* Free: feature comparison */}
               {!isPremium && (
-                <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5">
+                <div className="bg-gray-50 border border-[#E2E8F0] rounded-2xl p-5">
                   <div className="text-gray-700 font-bold mb-3">Upgrade to Premium</div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <div className="font-semibold text-gray-500 mb-2">Free Plan</div>
-                      <ul className="space-y-1.5 text-gray-500">
+                      <div className="font-semibold text-[#64748B] mb-2">Free Plan</div>
+                      <ul className="space-y-1.5 text-[#64748B]">
                         <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-gray-300 rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>Generate meal plan</li>
                         <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-gray-300 rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>Save one plan per child</li>
                         <li className="text-gray-300 line-through">4-week planner</li>
@@ -985,13 +985,13 @@ export default function NutritionTab() {
                       </ul>
                     </div>
                     <div>
-                      <div className="font-semibold text-[#764ba2] mb-2">Premium Plan</div>
-                      <ul className="space-y-1.5 text-[#764ba2]">
-                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#667eea] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>Generate meal plan</li>
-                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#667eea] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>Unlimited plan history</li>
-                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#667eea] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>4-week planner grid</li>
-                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#667eea] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>Auto shopping list</li>
-                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#667eea] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>BMI tracking</li>
+                      <div className="font-semibold text-[#2C3E50] mb-2">Premium Plan</div>
+                      <ul className="space-y-1.5 text-[#2C3E50]">
+                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#8BA888] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>Generate meal plan</li>
+                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#8BA888] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>Unlimited plan history</li>
+                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#8BA888] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>4-week planner grid</li>
+                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#8BA888] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>Auto shopping list</li>
+                        <li className="flex items-center gap-1.5"><span className="w-3.5 h-3.5 bg-[#8BA888] rounded-full inline-flex items-center justify-center flex-shrink-0"><svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 8 8"><path d="M6.5 1.5L3 5 1.5 3.5" stroke="white" strokeWidth="1.2" fill="none"/></svg></span>BMI tracking</li>
                       </ul>
                     </div>
                   </div>
@@ -1002,8 +1002,8 @@ export default function NutritionTab() {
 
           {/* ── 4-WEEK PLAN VIEW (premium) ── */}
           {isPremium && plannerView === 'weekplan' && (
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
-              <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow flex items-center justify-between">
+            <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4">
+              <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow flex items-center justify-between">
                 <span>4-Week Meal Plan</span>
                 <div className="flex items-center gap-3">
                   {viewingReadOnly && (
@@ -1028,7 +1028,7 @@ export default function NutritionTab() {
                   />
 
                   {!viewingReadOnly && (
-                    <div className="mt-5 pt-4 border-t border-gray-100">
+                    <div className="mt-5 pt-4 border-t border-[#E2E8F0]">
                       {saveMsg && (
                         <div className={`text-sm font-semibold mb-3 px-3 py-2 rounded-lg ${
                           saveMsg.includes('success') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'}`}>
@@ -1037,11 +1037,11 @@ export default function NutritionTab() {
                       )}
                       <div className="flex gap-3 flex-wrap">
                         <button onClick={handleSave} disabled={saving}
-                          className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-6 py-2.5 rounded-xl hover:opacity-90 transition-all text-sm disabled:opacity-50">
+                          className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-6 py-2.5 rounded-xl hover:opacity-90 transition-all text-sm disabled:opacity-50">
                           {saving ? 'Saving...' : 'Save 4-Week Plan'}
                         </button>
                         <button onClick={() => { setPlannerView('setup'); setMealPlan(null); }}
-                          className="bg-gray-100 text-gray-600 font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-200 text-sm">
+                          className="bg-gray-100 text-[#64748B] font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-200 text-sm">
                           Regenerate
                         </button>
                       </div>
@@ -1052,7 +1052,7 @@ export default function NutritionTab() {
                 <div className="text-center py-12 text-gray-400">
                   <p className="text-sm">Generate a plan first from the Setup tab</p>
                   <button onClick={() => setPlannerView('setup')}
-                    className="mt-3 text-sm px-4 py-2 rounded-xl bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-semibold hover:opacity-90">
+                    className="mt-3 text-sm px-4 py-2 rounded-xl bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-semibold hover:opacity-90">
                     Go to Setup
                   </button>
                 </div>
@@ -1062,8 +1062,8 @@ export default function NutritionTab() {
 
           {/* ── HISTORY VIEW (premium) ── */}
           {isPremium && plannerView === 'history' && (
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
-              <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow">
+            <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4">
+              <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow">
                 Plan History
               </div>
               <HistoryPanel history={planHistory} onView={handleViewHistoryPlan} />
@@ -1072,8 +1072,8 @@ export default function NutritionTab() {
 
           {/* ── SHOPPING LIST (premium) ── */}
           {isPremium && plannerView === 'shopping' && (
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4">
-              <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow">
+            <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4">
+              <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow">
                 Shopping List
               </div>
               {shoppingList ? (

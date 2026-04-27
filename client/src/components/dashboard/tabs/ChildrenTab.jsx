@@ -8,19 +8,19 @@ import { fetchChildren, addChild, deleteChild } from '../../../redux/slices/chil
 function ConfirmModal({ message, onConfirm, onCancel }) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] px-6 py-4">
+      <div className="bg-white rounded-xl w-full max-w-sm shadow-2xl overflow-hidden border border-[#E2E8F0]">
+        <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] px-6 py-4">
           <p className="text-white font-bold text-base">Confirm Action</p>
         </div>
         <div className="p-6">
-          <p className="text-gray-700 text-sm mb-6">{message}</p>
+          <p className="text-[#64748B] text-sm mb-6">{message}</p>
           <div className="flex gap-3">
             <button onClick={onCancel}
-              className="flex-1 py-2.5 border-2 border-[#667eea] text-[#667eea] font-semibold rounded-xl hover:bg-[#667eea]/5 active:scale-95 transition-all text-sm">
+              className="flex-1 py-2.5 border-2 border-[#E2E8F0] text-[#64748B] font-semibold rounded-lg hover:border-[#8BA888] hover:text-[#8BA888] transition-all text-sm">
               Cancel
             </button>
             <button onClick={onConfirm}
-              className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm">
+              className="flex-1 bg-red-500 text-white font-bold py-2.5 rounded-lg hover:bg-red-600 transition-all text-sm">
               Remove
             </button>
           </div>
@@ -55,7 +55,7 @@ const FREE_PLAN_LIMIT = 1;
 
 function UpgradeBanner({ onClose, onUpgrade }) {
   return (
-    <div className="bg-amber-50 border border-amber-300 rounded-2xl p-5 mb-5 flex items-start gap-4">
+    <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-5 mb-5 flex items-start gap-4">
       <div className="flex-1">
         <p className="font-bold text-amber-800 text-sm mb-1">Free Plan — 1 Profile Limit Reached</p>
         <p className="text-amber-700 text-xs mb-3">
@@ -63,7 +63,7 @@ function UpgradeBanner({ onClose, onUpgrade }) {
         </p>
         <button
           onClick={onUpgrade}
-          className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white text-xs font-bold px-4 py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all"
+          className="bg-[#8BA888] text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#6D8A6A] transition-all"
         >
           Upgrade to Premium
         </button>
@@ -126,8 +126,8 @@ export default function ChildrenTab() {
   const handleConfirmDelete = () => { dispatch(deleteChild(confirmId)); setConfirmId(null); };
   const handleCancelDelete = () => setConfirmId(null);
 
-  const inputCls = 'w-full px-4 py-2.5 border-2 border-[#667eea] rounded-xl focus:outline-none focus:border-[#764ba2] focus:ring-2 focus:ring-[#667eea]/20 text-sm transition-colors';
-  const labelCls = 'block text-[#764ba2] font-semibold mb-1 text-sm';
+  const inputCls = 'w-full px-4 py-3 border-2 border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#8BA888] focus:ring-3 focus:ring-[#8BA888]/10 text-sm transition-all';
+  const labelCls = 'block text-[#2C3E50] font-semibold mb-2 text-sm';
 
   return (
     <div>
@@ -139,21 +139,21 @@ export default function ChildrenTab() {
         />
       )}
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold text-lg px-5 py-3 rounded-xl shadow flex-1">
+      <div className="flex items-center justify-between mb-5">
+        <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold text-xl px-6 py-4 rounded-lg shadow-sm flex-1">
           My Children
           {isFree && (
-            <span className="ml-3 text-xs font-normal bg-white/20 px-2 py-0.5 rounded-full">
+            <span className="ml-3 text-xs font-normal bg-white/20 px-2.5 py-1 rounded-full">
               {list.length}/{FREE_PLAN_LIMIT} Free Profile{FREE_PLAN_LIMIT > 1 ? 's' : ''}
             </span>
           )}
         </div>
         <button
           onClick={handleAddClick}
-          className={`ml-4 font-bold px-5 py-3 rounded-xl text-sm shadow transition-all active:scale-95 ${
+          className={`ml-4 font-bold px-5 py-3 rounded-lg text-sm shadow-sm transition-all ${
             atFreeLimit
               ? 'bg-amber-400 text-white hover:bg-amber-500'
-              : 'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white hover:opacity-90'
+              : 'bg-[#8BA888] text-white hover:bg-[#6D8A6A]'
           }`}
         >
           {atFreeLimit ? 'Upgrade to Add More' : '+ Add Child'}
@@ -168,29 +168,29 @@ export default function ChildrenTab() {
         />
       )}
 
-      {isLoading && <p className="text-center text-gray-400 py-10">Loading...</p>}
+      {isLoading && <p className="text-center text-[#64748B] py-10">Loading...</p>}
 
       {/* Children Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {list.map(child => {
           const bmiVal = child.bmi ? parseFloat(child.bmi) : calcBmi(child.weight, child.height);
           const status = isPremium ? bmiStatus(bmiVal) : null;
 
           return (
-            <div key={child.id} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+            <div key={child.id} className="bg-white border border-[#E2E8F0] rounded-xl p-6 shadow-sm">
               {/* Name + meta */}
               <div className="mb-4">
-                <h3 className="font-bold text-gray-800 text-base leading-snug">
+                <h3 className="font-bold text-[#2C3E50] text-lg leading-snug">
                   {child.name}
                 </h3>
-                <div className="flex items-center gap-2 mt-1 flex-wrap">
-                  <span className="text-xs text-gray-400">{calcAge(child.dateOfBirth)}</span>
-                  <span className="text-gray-200">|</span>
-                  <span className="text-xs text-gray-400">{GENDER_LABEL[child.gender] || 'Other'}</span>
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  <span className="text-xs text-[#64748B]">{calcAge(child.dateOfBirth)}</span>
+                  <span className="text-[#E2E8F0]">|</span>
+                  <span className="text-xs text-[#64748B]">{GENDER_LABEL[child.gender] || 'Other'}</span>
                   {child.bloodType && (
                     <>
-                      <span className="text-gray-200">|</span>
-                      <span className="text-xs text-gray-400">Blood type: {child.bloodType}</span>
+                      <span className="text-[#E2E8F0]">|</span>
+                      <span className="text-xs text-[#64748B]">Blood type: {child.bloodType}</span>
                     </>
                   )}
                 </div>
@@ -198,32 +198,32 @@ export default function ChildrenTab() {
 
               {/* Weight / Height / BMI */}
               <div className={`grid gap-3 mb-4 ${isPremium ? 'grid-cols-3' : 'grid-cols-2'}`}>
-                <div className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-2.5">
-                  <p className="text-gray-400 text-xs mb-0.5">Weight</p>
-                  <p className="font-bold text-gray-800 text-sm">
+                <div className="bg-[#F0F9F5] border border-[#8BA888]/20 rounded-lg px-3 py-3">
+                  <p className="text-[#64748B] text-xs mb-1 font-medium">Weight</p>
+                  <p className="font-bold text-[#2C3E50] text-sm">
                     {child.weight ? `${child.weight} kg` : '—'}
                   </p>
                 </div>
-                <div className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-2.5">
-                  <p className="text-gray-400 text-xs mb-0.5">Height</p>
-                  <p className="font-bold text-gray-800 text-sm">
+                <div className="bg-[#F0F9F5] border border-[#8BA888]/20 rounded-lg px-3 py-3">
+                  <p className="text-[#64748B] text-xs mb-1 font-medium">Height</p>
+                  <p className="font-bold text-[#2C3E50] text-sm">
                     {child.height ? `${child.height} cm` : '—'}
                   </p>
                 </div>
                 {isPremium && (
-                  <div className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-2.5">
-                    <p className="text-gray-400 text-xs mb-0.5">BMI</p>
+                  <div className="bg-[#F0F9F5] border border-[#8BA888]/20 rounded-lg px-3 py-3">
+                    <p className="text-[#64748B] text-xs mb-1 font-medium">BMI</p>
                     {bmiVal ? (
                       <div>
-                        <p className="font-bold text-gray-800 text-sm">{bmiVal}</p>
+                        <p className="font-bold text-[#2C3E50] text-sm">{bmiVal}</p>
                         {status && (
-                          <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${status.color}`}>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${status.color}`}>
                             {status.label}
                           </span>
                         )}
                       </div>
                     ) : (
-                      <p className="font-bold text-gray-400 text-sm">—</p>
+                      <p className="font-bold text-[#64748B] text-sm">—</p>
                     )}
                   </div>
                 )}
@@ -231,19 +231,19 @@ export default function ChildrenTab() {
 
               {/* Allergies */}
               {child.allergies && (
-                <p className="text-gray-400 text-xs mb-4 bg-gray-50 rounded-lg px-3 py-1.5">
+                <p className="text-[#64748B] text-xs mb-4 bg-[#FFF5F3] border border-[#FF9B8F]/20 rounded-lg px-3 py-2">
                   Allergies: {child.allergies}
                 </p>
               )}
 
               {/* Actions */}
               <div className="flex gap-2">
-                <button className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-semibold py-2 rounded-xl text-xs hover:opacity-90 active:scale-95 transition-all">
+                <button className="flex-1 bg-[#8BA888] text-white font-semibold py-2.5 rounded-lg text-sm hover:bg-[#6D8A6A] transition-all">
                   View Details
                 </button>
                 <button
                   onClick={() => handleDelete(child.id)}
-                  className="flex-1 bg-white border-2 border-red-200 text-red-500 font-semibold py-2 rounded-xl text-xs hover:bg-red-50 active:scale-95 transition-all"
+                  className="flex-1 bg-white border-2 border-red-200 text-red-500 font-semibold py-2.5 rounded-lg text-sm hover:bg-red-50 transition-all"
                 >
                   Remove
                 </button>
@@ -256,14 +256,14 @@ export default function ChildrenTab() {
         {!isLoading && !atFreeLimit && (
           <div
             onClick={handleAddClick}
-            className="border-2 border-dashed border-[#667eea] rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer bg-[#667eea]/5 hover:bg-[#667eea]/10 transition-colors min-h-[180px]"
+            className="border-2 border-dashed border-[#8BA888] rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer bg-[#F0F9F5] hover:bg-[#E6F4EF] transition-colors min-h-[200px]"
           >
-            <div className="w-10 h-10 rounded-full bg-[#667eea]/10 flex items-center justify-center mb-3">
-              <svg className="w-5 h-5 text-[#667eea]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="w-12 h-12 rounded-full bg-[#8BA888]/20 flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-[#8BA888]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
             </div>
-            <p className="text-[#667eea] font-semibold text-sm">Add New Child</p>
+            <p className="text-[#8BA888] font-semibold text-sm">Add New Child</p>
           </div>
         )}
 
@@ -271,10 +271,10 @@ export default function ChildrenTab() {
         {!isLoading && atFreeLimit && (
           <div
             onClick={handleAddClick}
-            className="border-2 border-dashed border-amber-300 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer bg-amber-50 hover:bg-amber-100 transition-colors min-h-[180px]"
+            className="border-2 border-dashed border-amber-300 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer bg-amber-50 hover:bg-amber-100 transition-colors min-h-[200px]"
           >
-            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mb-3">
-              <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
@@ -287,12 +287,12 @@ export default function ChildrenTab() {
       {/* Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-auto shadow-2xl">
-            <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold text-base px-6 py-4 rounded-t-2xl">
+          <div className="bg-white rounded-xl w-full max-w-lg max-h-[90vh] overflow-auto shadow-2xl border border-[#E2E8F0]">
+            <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold text-lg px-6 py-4 rounded-t-xl">
               Create Child Profile
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              {error && <div className="bg-red-500 text-white px-4 py-3 rounded-xl text-sm">{error}</div>}
+              {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{error}</div>}
 
               <div>
                 <label className={labelCls}>Child Name</label>
@@ -344,11 +344,11 @@ export default function ChildrenTab() {
 
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowForm(false)}
-                  className="flex-1 py-3 border-2 border-[#667eea] text-[#667eea] font-semibold rounded-xl hover:bg-[#667eea]/5 active:scale-95 transition-all">
+                  className="flex-1 py-3 border-2 border-[#E2E8F0] text-[#64748B] font-semibold rounded-lg hover:border-[#8BA888] hover:text-[#8BA888] transition-all">
                   Cancel
                 </button>
                 <button type="submit" disabled={saving}
-                  className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold py-3 rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-55">
+                  className="flex-1 bg-[#8BA888] text-white font-bold py-3 rounded-lg hover:bg-[#6D8A6A] transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                   {saving ? 'Saving...' : 'Create Profile'}
                 </button>
               </div>

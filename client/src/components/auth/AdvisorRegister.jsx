@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Stethoscope } from 'lucide-react';
 import apiService from '../../services/api';
 
 const DAYS = [
@@ -69,16 +69,20 @@ export default function AdvisorRegister() {
 
   if (success) {
     return (
-      <div className="h-screen overflow-hidden bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center px-5">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 text-center max-w-sm w-full">
-          <div className="text-4xl mb-3">✅</div>
-          <h3 className="text-purple-700 text-lg font-bold mb-1">Registration Submitted!</h3>
-          <p className="text-gray-500 text-xs mb-5">
+      <div className="min-h-screen bg-gradient-to-b from-white via-[#FFF5F3] to-white flex items-center justify-center px-5">
+        <div className="bg-white rounded-xl shadow-sm border border-[#E2E8F0] p-10 text-center max-w-md w-full">
+          <div className="w-20 h-20 bg-gradient-to-br from-[#8BA888] to-[#6D8A6A] rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="text-[#2C3E50] text-2xl font-bold mb-2">Registration Submitted!</h3>
+          <p className="text-[#64748B] text-sm mb-5">
             Your application is pending admin approval. You will be redirected to the sign-in page shortly.
           </p>
           <button
             onClick={() => router.push('/login/advisor')}
-            className="w-full bg-gradient-to-r from-purple-600 to-purple-900 text-white font-bold py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm"
+            className="w-full bg-[#8BA888] text-white font-semibold py-3 rounded-lg hover:bg-[#6D8A6A] transition-all text-sm"
           >
             Go to Sign In
           </button>
@@ -88,28 +92,30 @@ export default function AdvisorRegister() {
   }
 
   return (
-    <div className="h-screen overflow-y-auto bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-start justify-center px-5 py-6">
+    <div className="min-h-screen bg-gradient-to-b from-white via-[#FFF5F3] to-white flex items-start justify-center px-5 py-8">
       <div className="w-full max-w-2xl">
 
-        <div className="text-center mb-4">
-          <div className="text-4xl mb-1">👨‍⚕️</div>
-          <h1 className="text-2xl font-extrabold text-white drop-shadow-lg">Smart Mom</h1>
-          <p className="text-white/85 mt-0.5 text-xs">Join as Healthcare Advisor</p>
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-gradient-to-br from-[#8BA888] to-[#6D8A6A] rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Stethoscope className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-[#2C3E50]">Smart Mom</h1>
+          <p className="text-[#64748B] mt-1 text-sm">Join as Healthcare Advisor</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-2xl p-6">
-          <h2 className="text-lg font-bold text-gray-800 mb-0.5">Advisor Sign Up</h2>
-          <p className="text-gray-400 text-xs mb-4">Register as a healthcare professional to join our platform.</p>
+        <div className="bg-white rounded-xl shadow-sm border border-[#E2E8F0] p-8">
+          <h2 className="text-xl font-bold text-[#2C3E50] mb-1">Advisor Sign Up</h2>
+          <p className="text-[#64748B] text-sm mb-6">Register as a healthcare professional to join our platform.</p>
 
           {error && (
-            <div className="bg-red-500 text-white px-3 py-2 rounded-xl mb-3 text-xs font-medium">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
             {/* Fields Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {[
                 { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'Dr. Name' },
                 { name: 'specialty', label: 'Specialization', type: 'text', placeholder: 'Child Nutrition, etc.' },
@@ -119,11 +125,11 @@ export default function AdvisorRegister() {
                 { name: 'phone', label: 'Phone', type: 'tel', placeholder: '09xxxxxxxxx' },
               ].map(({ name, label, type, placeholder }) => (
                 <div key={name}>
-                  <label className="block text-purple-700 font-semibold mb-1 text-xs">{label}</label>
+                  <label className="block text-[#2C3E50] font-semibold mb-2 text-sm">{label}</label>
                   <input
                     name={name} type={type} required
                     placeholder={placeholder} value={formData[name]} onChange={handleChange}
-                    className="w-full px-3 py-2 border-2 border-purple-400 rounded-xl focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-400/20 text-sm transition-colors"
+                    className="w-full px-4 py-3 border-2 border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#8BA888] focus:ring-3 focus:ring-[#8BA888]/10 text-sm transition-all"
                   />
                 </div>
               ))}
@@ -133,15 +139,15 @@ export default function AdvisorRegister() {
                 { name: 'confirmPassword', label: 'Confirm Password', show: showConfirm, toggle: () => setShowConfirm(!showConfirm) },
               ].map(({ name, label, show, toggle }) => (
                 <div key={name}>
-                  <label className="block text-purple-700 font-semibold mb-1 text-xs">{label}</label>
+                  <label className="block text-[#2C3E50] font-semibold mb-2 text-sm">{label}</label>
                   <div className="relative">
                     <input
                       name={name} type={show ? 'text' : 'password'} required
-                      placeholder="••••••••" value={formData[name]} onChange={handleChange}
-                      className="w-full px-3 py-2 pr-10 border-2 border-purple-400 rounded-xl focus:outline-none focus:border-purple-600 focus:ring-2 focus:ring-purple-400/20 text-sm transition-colors"
+                      placeholder="Enter your password" value={formData[name]} onChange={handleChange}
+                      className="w-full px-4 py-3 pr-12 border-2 border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#8BA888] focus:ring-3 focus:ring-[#8BA888]/10 text-sm transition-all"
                     />
-                    <button type="button" onClick={toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-400 hover:text-purple-700 transition-colors">
-                      {show ? <EyeOff size={16} /> : <Eye size={16} />}
+                    <button type="button" onClick={toggle} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#8BA888] transition-colors">
+                      {show ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
@@ -149,23 +155,23 @@ export default function AdvisorRegister() {
             </div>
 
             {/* Availability */}
-            <div className="bg-gradient-to-r from-[#a29bfe] to-[#6c5ce7] rounded-xl p-4 mb-3">
-              <h4 className="text-white font-bold mb-3 text-sm">Set Your Availability</h4>
-              <div className="space-y-1.5">
+            <div className="bg-gradient-to-br from-[#F0F9F5] to-[#E6F4EF] border border-[#8BA888]/20 rounded-lg p-5 mb-4">
+              <h4 className="text-[#2C3E50] font-bold mb-4 text-base">Set Your Availability</h4>
+              <div className="space-y-2.5">
                 {DAYS.map(day => (
-                  <div key={day.value} className="bg-white rounded-xl px-3 py-2">
-                    <p className="font-bold text-gray-700 text-xs mb-1.5">{day.label}</p>
-                    <div className="flex gap-6">
+                  <div key={day.value} className="bg-white rounded-lg px-4 py-3 border border-[#E2E8F0]">
+                    <p className="font-bold text-[#2C3E50] text-sm mb-2">{day.label}</p>
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
                       {[
                         { slot: 'morning', label: 'Morning (9AM–12PM)' },
                         { slot: 'evening', label: 'Evening (2PM–5PM)' },
                       ].map(({ slot, label }) => (
-                        <label key={slot} className="flex items-center gap-2 cursor-pointer text-xs text-gray-600">
+                        <label key={slot} className="flex items-center gap-2 cursor-pointer text-sm text-[#64748B]">
                           <input
                             type="checkbox"
                             checked={availability[day.value][slot]}
                             onChange={() => toggleSlot(day.value, slot)}
-                            className="accent-purple-400 w-3.5 h-3.5"
+                            className="accent-[#8BA888] w-4 h-4"
                           />
                           {label}
                         </label>
@@ -177,19 +183,19 @@ export default function AdvisorRegister() {
             </div>
 
             {/* Note */}
-            <div className="bg-blue-50 border border-blue-200 rounded-xl px-3 py-2 mb-3 text-xs text-gray-600">
-              <span className="font-semibold">Note:</span> Your advisor account will be pending admin approval before you can log in.
+            <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-4 text-sm text-[#64748B]">
+              <span className="font-semibold text-[#2C3E50]">Note:</span> Your advisor account will be pending admin approval before you can log in.
             </div>
 
             <button
               type="submit" disabled={isLoading}
-              className="w-full bg-gradient-to-r from-purple-600 to-purple-900 text-white font-bold py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all disabled:opacity-55 disabled:cursor-not-allowed text-sm"
+              className="w-full bg-[#8BA888] text-white font-semibold py-3 rounded-lg hover:bg-[#6D8A6A] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm mt-6"
             >
               {isLoading ? 'Submitting...' : 'Submit for Admin Review'}
             </button>
           </form>
 
-          <a href="/login" className="block text-center text-purple-400 font-semibold text-xs mt-3 hover:underline">
+          <a href="/login" className="block text-center text-[#8BA888] font-semibold text-sm mt-4 hover:text-[#6D8A6A] transition-colors">
             Already have an account? Sign In
           </a>
         </div>

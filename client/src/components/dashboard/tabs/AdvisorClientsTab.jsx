@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { User, Phone, Calendar, Users, Baby, X } from 'lucide-react';
 
 function calcAge(dob) {
   if (!dob) return '';
@@ -25,7 +26,7 @@ function renderNotes(text) {
       .replace(/_(.+?)_/g, '<em>$1</em>');
     return (
       <div key={i} className={isBullet ? 'flex gap-1.5 mb-0.5' : 'mb-0.5'}>
-        {isBullet && <span className="text-[#667eea] font-bold shrink-0">•</span>}
+        {isBullet && <span className="text-[#8BA888] font-bold shrink-0">•</span>}
         <span dangerouslySetInnerHTML={{ __html: isBullet ? content.replace(/^•\s/, '') : content }} />
       </div>
     );
@@ -41,7 +42,7 @@ function ClientDetailsModal({ client, appointments, onClose }) {
     confirmed:  'bg-green-100 text-green-700 border-green-200',
     pending:    'bg-yellow-100 text-yellow-700 border-yellow-200',
     rejected:   'bg-red-100 text-red-600 border-red-200',
-    cancelled:  'bg-gray-100 text-gray-500 border-gray-200',
+    cancelled:  'bg-gray-100 text-gray-500 border-[#E2E8F0]',
     completed:  'bg-blue-100 text-blue-700 border-blue-200',
   };
 
@@ -49,27 +50,27 @@ function ClientDetailsModal({ client, appointments, onClose }) {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl w-full max-w-xl max-h-[90vh] overflow-auto shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-4 rounded-t-2xl flex justify-between items-start">
+        <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-4 rounded-t-2xl flex justify-between items-start">
           <div>
-            <div className="text-lg">👤 {client.parent.fullName}</div>
+            <div className="text-lg flex items-center gap-2"><User className="w-5 h-5" /><span>{client.parent.fullName}</span></div>
             <div className="text-white/75 text-sm font-normal mt-0.5">{client.parent.email}</div>
           </div>
-          <button onClick={onClose} className="text-white/80 hover:text-white text-xl leading-none mt-0.5">✕</button>
+          <button onClick={onClose} className="text-white/80 hover:text-white text-xl leading-none mt-0.5"><X className="w-5 h-5" /></button>
         </div>
 
         <div className="p-5">
           {/* Client info */}
           <div className="grid grid-cols-2 gap-2 mb-5">
             {client.parent.phone && (
-              <div className="bg-gray-50 border-l-4 border-[#667eea] px-3 py-2 rounded-r-xl text-sm col-span-2">
+              <div className="bg-[#F8FAFC] border-l-4 border-[#8BA888] px-3 py-2 rounded-r-xl text-sm col-span-2">
                 <strong>Phone:</strong> {client.parent.phone}
               </div>
             )}
-            <div className="bg-gray-50 border-l-4 border-[#667eea] px-3 py-2 rounded-r-xl text-sm">
+            <div className="bg-[#F8FAFC] border-l-4 border-[#8BA888] px-3 py-2 rounded-r-xl text-sm">
               <strong>Appointments:</strong> {clientAppts.length}
             </div>
             {client.lastAppointment && (
-              <div className="bg-gray-50 border-l-4 border-[#667eea] px-3 py-2 rounded-r-xl text-sm">
+              <div className="bg-[#F8FAFC] border-l-4 border-[#8BA888] px-3 py-2 rounded-r-xl text-sm">
                 <strong>Last Visit:</strong> {new Date(client.lastAppointment).toLocaleDateString()}
               </div>
             )}
@@ -78,11 +79,12 @@ function ClientDetailsModal({ client, appointments, onClose }) {
           {/* Children */}
           {client.children.length > 0 && (
             <div className="mb-5">
-              <div className="text-xs font-semibold text-[#636e72] uppercase mb-2">Children</div>
+              <div className="text-xs font-semibold text-[#64748B] uppercase mb-2">Children</div>
               <div className="flex flex-wrap gap-2">
                 {client.children.map(child => (
-                  <span key={child.id} className="bg-purple-50 border border-purple-200 text-purple-700 rounded-full px-3 py-1 text-xs">
-                    {child.gender === 'female' ? '👧' : '👦'} {child.name} ({calcAge(child.dateOfBirth)})
+                  <span key={child.id} className="bg-[#F0F9F5] border border-[#8BA888]/30 text-[#8BA888] rounded-full px-3 py-1 text-xs flex items-center gap-1.5">
+                    <Baby className="w-3.5 h-3.5" />
+                    <span>{child.name} ({calcAge(child.dateOfBirth)})</span>
                   </span>
                 ))}
               </div>
@@ -90,35 +92,42 @@ function ClientDetailsModal({ client, appointments, onClose }) {
           )}
 
           {/* Appointments with notes */}
-          <div className="text-xs font-semibold text-[#636e72] uppercase mb-2">Appointment History</div>
+          <div className="text-xs font-semibold text-[#64748B] uppercase mb-2">Appointment History</div>
           {clientAppts.length === 0 ? (
             <p className="text-[#b2bec3] text-sm text-center py-4">No appointments found.</p>
           ) : (
             clientAppts.map(appt => (
-              <div key={appt.id} className="border border-gray-200 rounded-xl mb-3 overflow-hidden">
-                <div className="flex justify-between items-center px-4 py-2.5 bg-gray-50">
-                  <div className="text-sm font-medium text-[#2d3436]">
-                    📅 {formatDate(appt.appointmentDate)} ⏰ {appt.appointmentTime}
+              <div key={appt.id} className="border border-[#E2E8F0] rounded-xl mb-3 overflow-hidden">
+                <div className="flex justify-between items-center px-4 py-2.5 bg-[#F8FAFC]">
+                  <div className="text-sm font-medium text-[#2d3436] flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>{formatDate(appt.appointmentDate)} {appt.appointmentTime}</span>
                   </div>
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${STATUS_COLORS[appt.status] || 'bg-gray-100 text-gray-500 border-gray-200'}`}>
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${STATUS_COLORS[appt.status] || 'bg-gray-100 text-gray-500 border-[#E2E8F0]'}`}>
                     {appt.status}
                   </span>
                 </div>
                 {appt.child && (
-                  <div className="px-4 py-1.5 text-xs text-[#636e72] border-t border-gray-100">
-                    👶 {appt.child.name}
+                  <div className="px-4 py-1.5 text-xs text-[#64748B] border-t border-[#E2E8F0] flex items-center gap-2">
+                    <Baby className="w-3.5 h-3.5" />
+                    <span>{appt.child.name}</span>
                     {appt.reason && <span className="ml-2 italic">· "{appt.reason}"</span>}
                   </div>
                 )}
                 {appt.notes ? (
                   <div className="px-4 py-3 bg-amber-50 border-t border-amber-100">
-                    <div className="text-xs font-semibold text-amber-700 mb-1.5">📝 Doctor Notes</div>
+                    <div className="text-xs font-semibold text-amber-700 mb-1.5 flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>Doctor Notes</span>
+                    </div>
                     <div className="text-sm text-[#2d3436] leading-relaxed">
                       {renderNotes(appt.notes)}
                     </div>
                   </div>
                 ) : (
-                  <div className="px-4 py-2.5 border-t border-gray-100 text-xs text-[#b2bec3] italic">
+                  <div className="px-4 py-2.5 border-t border-[#E2E8F0] text-xs text-[#b2bec3] italic">
                     No notes added yet.
                   </div>
                 )}
@@ -161,44 +170,48 @@ export default function AdvisorClientsTab() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow text-[1.3rem]">My Clients</div>
+      <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-bold px-5 py-3 rounded-xl mb-5 shadow text-[1.3rem]">My Clients</div>
 
       {clients.length === 0 && (
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm mb-4 text-center py-10">
-          <div className="text-[3rem] mb-4">👨‍👩‍👧</div>
-          <p className="text-[#636e72]">No clients yet. Clients appear here once you have appointments.</p>
+        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm mb-4 text-center py-10">
+          <div className="w-20 h-20 bg-gradient-to-br from-[#8BA888] to-[#6D8A6A] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Users className="w-10 h-10 text-white" />
+          </div>
+          <p className="text-[#64748B]">No clients yet. Clients appear here once you have appointments.</p>
         </div>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {clients.map(({ parent, children, appointmentCount, lastAppointment }) => (
-          <div key={parent.id} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm flex flex-col">
+          <div key={parent.id} className="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden shadow-sm flex flex-col">
             {/* Card header */}
-            <div className="bg-gradient-to-r from-[#667eea] to-[#764ba2] px-4 py-3 text-white">
-              <div className="font-bold text-base">👤 {parent.fullName}</div>
+            <div className="bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] px-4 py-3 text-white">
+              <div className="font-bold text-base flex items-center gap-2"><User className="w-4 h-4" /><span>{parent.fullName}</span></div>
               <div className="text-white/75 text-xs mt-0.5">{parent.email}</div>
             </div>
             {/* Card body */}
             <div className="p-4 flex-1">
               {parent.phone && (
-                <div className="bg-gray-50 border-l-4 border-[#667eea] px-3 py-2 rounded-r-xl mb-2 text-sm">
-                  <strong>Phone:</strong> {parent.phone}
+                <div className="bg-[#F8FAFC] border-l-4 border-[#8BA888] px-3 py-2 rounded-r-xl mb-2 text-sm flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-[#8BA888]" />
+                  <span><strong>Phone:</strong> {parent.phone}</span>
                 </div>
               )}
-              <div className="bg-gray-50 border-l-4 border-[#667eea] px-3 py-2 rounded-r-xl mb-2 text-sm">
+              <div className="bg-[#F8FAFC] border-l-4 border-[#8BA888] px-3 py-2 rounded-r-xl mb-2 text-sm">
                 <strong>Appointments:</strong> {appointmentCount}
               </div>
               {lastAppointment && (
-                <div className="bg-gray-50 border-l-4 border-[#667eea] px-3 py-2 rounded-r-xl mb-2 text-sm">
+                <div className="bg-[#F8FAFC] border-l-4 border-[#8BA888] px-3 py-2 rounded-r-xl mb-2 text-sm">
                   <strong>Last Visit:</strong> {new Date(lastAppointment).toLocaleDateString()}
                 </div>
               )}
               {children.length > 0 && (
                 <div className="mt-2.5">
-                  <div className="text-[0.8rem] font-semibold text-[#636e72] mb-1.5">CHILDREN</div>
+                  <div className="text-[0.8rem] font-semibold text-[#64748B] mb-1.5">CHILDREN</div>
                   {children.map(child => (
-                    <div key={child.id} className="text-[0.85rem] text-[#2d3436] mb-1">
-                      {child.gender === 'female' ? '👧' : '👦'} {child.name} ({calcAge(child.dateOfBirth)})
+                    <div key={child.id} className="text-[0.85rem] text-[#2d3436] mb-1 flex items-center gap-2">
+                      <Baby className="w-4 h-4 text-[#8BA888]" />
+                      <span>{child.name} ({calcAge(child.dateOfBirth)})</span>
                     </div>
                   ))}
                 </div>
@@ -208,7 +221,7 @@ export default function AdvisorClientsTab() {
             <div className="px-4 pb-4">
               <button
                 onClick={() => setDetailsModal({ parent, children, appointmentCount, lastAppointment })}
-                className="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white font-semibold py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm">
+                className="w-full bg-gradient-to-r from-[#8BA888] to-[#6D8A6A] text-white font-semibold py-2 rounded-xl hover:opacity-90 active:scale-95 transition-all text-sm">
                 View Details
               </button>
             </div>
