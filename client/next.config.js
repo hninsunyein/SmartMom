@@ -1,13 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:5001/api/:path*',
-      },
-    ];
-  },
+  // Removed rewrites - using API route handler instead
+  // API route at /app/api/[...path]/route.js handles proxying to BACKEND_URL
 };
 
 module.exports = nextConfig;
